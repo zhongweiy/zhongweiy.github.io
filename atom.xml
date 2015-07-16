@@ -4,7 +4,7 @@
   <title><![CDATA[我的笔记]]></title>
   <link href="http://zhongweiy.github.io/atom.xml" rel="self"/>
   <link href="http://zhongweiy.github.io/"/>
-  <updated>2015-07-16T18:51:27+08:00</updated>
+  <updated>2015-07-16T18:52:21+08:00</updated>
   <id>http://zhongweiy.github.io/</id>
   <author>
     <name><![CDATA[zw]]></name>
@@ -12,5 +12,14 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[Hello]]></title>
+    <link href="http://zhongweiy.github.io/blog/2015/07/16/hello/"/>
+    <updated>2015-07-16T18:52:12+08:00</updated>
+    <id>http://zhongweiy.github.io/blog/2015/07/16/hello</id>
+    <content type="html"><![CDATA[
+]]></content>
+  </entry>
   
 </feed>
