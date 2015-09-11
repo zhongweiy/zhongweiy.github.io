@@ -140,9 +140,9 @@
 <span class='line-number'>3</span>
 <span class='line-number'>4</span>
 </pre></td><td class='code'><pre><code class='lisp'><span class='line'><span class="p">((</span><span class="k">lambda</span> <span class="p">(</span><span class="nv">m</span><span class="p">)</span>
-</span><span class='line'>  <span class="p">(</span><span class="nv">m</span> <span class="nv">m</span><span class="p">))</span>
-</span><span class='line'>    <span class="p">(</span><span class="k">lambda</span> <span class="p">(</span><span class="nv">l</span><span class="p">)</span>
-</span><span class='line'>      <span class="p">(</span><span class="nv">l</span> <span class="nv">l</span><span class="p">)))</span>
+</span><span class='line'>   <span class="p">(</span><span class="nv">m</span> <span class="nv">m</span><span class="p">))</span>
+</span><span class='line'> <span class="p">(</span><span class="k">lambda</span> <span class="p">(</span><span class="nv">l</span><span class="p">)</span>
+</span><span class='line'>   <span class="p">(</span><span class="nv">l</span> <span class="nv">l</span><span class="p">)))</span>
 </span></code></pre></td></tr></table></div></figure>
 
 
@@ -154,9 +154,9 @@
 <span class='line-number'>3</span>
 <span class='line-number'>4</span>
 </pre></td><td class='code'><pre><code class='lisp'><span class='line'><span class="p">((</span><span class="k">lambda</span> <span class="p">(</span><span class="nv">l</span><span class="p">)</span>
-</span><span class='line'>  <span class="p">(</span><span class="nv">l</span> <span class="nv">l</span><span class="p">))</span>
-</span><span class='line'>    <span class="p">(</span><span class="k">lambda</span> <span class="p">(</span><span class="nv">l</span><span class="p">)</span>
-</span><span class='line'>      <span class="p">(</span><span class="nv">l</span> <span class="nv">l</span><span class="p">)))</span>
+</span><span class='line'>   <span class="p">(</span><span class="nv">l</span> <span class="nv">l</span><span class="p">))</span>
+</span><span class='line'> <span class="p">(</span><span class="k">lambda</span> <span class="p">(</span><span class="nv">l</span><span class="p">)</span>
+</span><span class='line'>   <span class="p">(</span><span class="nv">l</span> <span class="nv">l</span><span class="p">)))</span>
 </span></code></pre></td></tr></table></div></figure>
 
 
@@ -173,11 +173,11 @@
 <span class='line-number'>5</span>
 <span class='line-number'>6</span>
 </pre></td><td class='code'><pre><code class='lisp'><span class='line'><span class="p">((</span><span class="k">lambda</span> <span class="p">(</span><span class="nv">m</span><span class="p">)</span>
-</span><span class='line'>  <span class="p">(</span><span class="nv">m</span> <span class="nv">?</span><span class="p">))</span>
-</span><span class='line'>    <span class="p">(</span><span class="k">lambda</span> <span class="p">(</span><span class="nv">l</span><span class="p">)</span>
-</span><span class='line'>      <span class="p">(</span><span class="k">lambda</span> <span class="p">(</span><span class="nv">n</span><span class="p">)</span>
-</span><span class='line'>        <span class="p">(</span><span class="k">if</span> <span class="p">(</span><span class="nb">&lt;</span> <span class="nv">n</span> <span class="mi">2</span><span class="p">)</span> <span class="mi">1</span>
-</span><span class='line'>          <span class="p">(</span><span class="nb">*</span> <span class="nv">n</span> <span class="p">(</span><span class="nv">l</span> <span class="p">(</span><span class="nb">-</span> <span class="nv">n</span> <span class="mi">1</span><span class="p">)))))))</span>
+</span><span class='line'>   <span class="p">(</span><span class="nv">m</span> <span class="nv">?</span><span class="p">))</span>
+</span><span class='line'> <span class="p">(</span><span class="k">lambda</span> <span class="p">(</span><span class="nv">l</span><span class="p">)</span>
+</span><span class='line'>   <span class="p">(</span><span class="k">lambda</span> <span class="p">(</span><span class="nv">n</span><span class="p">)</span>
+</span><span class='line'>     <span class="p">(</span><span class="k">if</span> <span class="p">(</span><span class="nb">&lt;</span> <span class="nv">n</span> <span class="mi">2</span><span class="p">)</span> <span class="mi">1</span>
+</span><span class='line'>       <span class="p">(</span><span class="nb">*</span> <span class="nv">n</span> <span class="p">(</span><span class="nv">l</span> <span class="p">(</span><span class="nb">-</span> <span class="nv">n</span> <span class="mi">1</span><span class="p">)))))))</span>
 </span></code></pre></td></tr></table></div></figure>
 
 
@@ -191,11 +191,11 @@
 <span class='line-number'>5</span>
 <span class='line-number'>6</span>
 </pre></td><td class='code'><pre><code class='lisp'><span class='line'><span class="p">((</span><span class="k">lambda</span> <span class="p">(</span><span class="nv">m</span><span class="p">)</span>
-</span><span class='line'>  <span class="p">(</span><span class="nv">m</span> <span class="p">(</span><span class="nv">m</span> <span class="nv">?</span><span class="p">)))</span>
-</span><span class='line'>    <span class="p">(</span><span class="k">lambda</span> <span class="p">(</span><span class="nv">l</span><span class="p">)</span>
-</span><span class='line'>      <span class="p">(</span><span class="k">lambda</span> <span class="p">(</span><span class="nv">n</span><span class="p">)</span>
-</span><span class='line'>        <span class="p">(</span><span class="k">if</span> <span class="p">(</span><span class="nb">&lt;</span> <span class="nv">n</span> <span class="mi">2</span><span class="p">)</span> <span class="mi">1</span>
-</span><span class='line'>           <span class="p">(</span><span class="nb">*</span> <span class="nv">n</span> <span class="p">(</span><span class="nv">l</span> <span class="p">(</span><span class="nb">-</span> <span class="nv">n</span> <span class="mi">1</span><span class="p">)))))))</span>
+</span><span class='line'>   <span class="p">(</span><span class="nv">m</span> <span class="p">(</span><span class="nv">m</span> <span class="nv">?</span><span class="p">)))</span>
+</span><span class='line'> <span class="p">(</span><span class="k">lambda</span> <span class="p">(</span><span class="nv">l</span><span class="p">)</span>
+</span><span class='line'>   <span class="p">(</span><span class="k">lambda</span> <span class="p">(</span><span class="nv">n</span><span class="p">)</span>
+</span><span class='line'>     <span class="p">(</span><span class="k">if</span> <span class="p">(</span><span class="nb">&lt;</span> <span class="nv">n</span> <span class="mi">2</span><span class="p">)</span> <span class="mi">1</span>
+</span><span class='line'>       <span class="p">(</span><span class="nb">*</span> <span class="nv">n</span> <span class="p">(</span><span class="nv">l</span> <span class="p">(</span><span class="nb">-</span> <span class="nv">n</span> <span class="mi">1</span><span class="p">)))))))</span>
 </span></code></pre></td></tr></table></div></figure>
 
 
@@ -209,11 +209,11 @@
 <span class='line-number'>5</span>
 <span class='line-number'>6</span>
 </pre></td><td class='code'><pre><code class='lisp'><span class='line'><span class="p">((</span><span class="k">lambda</span> <span class="p">(</span><span class="nv">m</span><span class="p">)</span>
-</span><span class='line'>  <span class="p">(</span><span class="nv">m</span> <span class="p">(</span><span class="nv">m</span> <span class="p">(</span><span class="nv">m</span> <span class="nv">?</span><span class="p">))))</span>
-</span><span class='line'>    <span class="p">(</span><span class="k">lambda</span> <span class="p">(</span><span class="nv">l</span><span class="p">)</span>
-</span><span class='line'>      <span class="p">(</span><span class="k">lambda</span> <span class="p">(</span><span class="nv">n</span><span class="p">)</span>
-</span><span class='line'>        <span class="p">(</span><span class="k">if</span> <span class="p">(</span><span class="nb">&lt;</span> <span class="nv">n</span> <span class="mi">2</span><span class="p">)</span> <span class="mi">1</span>
-</span><span class='line'>           <span class="p">(</span><span class="nb">*</span> <span class="nv">n</span> <span class="p">(</span><span class="nv">l</span> <span class="p">(</span><span class="nb">-</span> <span class="nv">n</span> <span class="mi">1</span><span class="p">)))))))</span>
+</span><span class='line'>   <span class="p">(</span><span class="nv">m</span> <span class="p">(</span><span class="nv">m</span> <span class="p">(</span><span class="nv">m</span> <span class="nv">?</span><span class="p">))))</span>
+</span><span class='line'> <span class="p">(</span><span class="k">lambda</span> <span class="p">(</span><span class="nv">l</span><span class="p">)</span>
+</span><span class='line'>   <span class="p">(</span><span class="k">lambda</span> <span class="p">(</span><span class="nv">n</span><span class="p">)</span>
+</span><span class='line'>     <span class="p">(</span><span class="k">if</span> <span class="p">(</span><span class="nb">&lt;</span> <span class="nv">n</span> <span class="mi">2</span><span class="p">)</span> <span class="mi">1</span>
+</span><span class='line'>       <span class="p">(</span><span class="nb">*</span> <span class="nv">n</span> <span class="p">(</span><span class="nv">l</span> <span class="p">(</span><span class="nb">-</span> <span class="nv">n</span> <span class="mi">1</span><span class="p">)))))))</span>
 </span></code></pre></td></tr></table></div></figure>
 
 
@@ -227,11 +227,11 @@
 <span class='line-number'>5</span>
 <span class='line-number'>6</span>
 </pre></td><td class='code'><pre><code class='lisp'><span class='line'><span class="p">((</span><span class="k">lambda</span> <span class="p">(</span><span class="nv">m</span><span class="p">)</span>
-</span><span class='line'>  <span class="p">(</span><span class="nv">m</span> <span class="p">(</span><span class="nv">m</span> <span class="p">(</span><span class="nv">m</span> <span class="p">(</span><span class="nv">m</span> <span class="nv">?</span><span class="p">)))))</span>
-</span><span class='line'>    <span class="p">(</span><span class="k">lambda</span> <span class="p">(</span><span class="nv">l</span><span class="p">)</span>
-</span><span class='line'>      <span class="p">(</span><span class="k">lambda</span> <span class="p">(</span><span class="nv">n</span><span class="p">)</span>
-</span><span class='line'>        <span class="p">(</span><span class="k">if</span> <span class="p">(</span><span class="nb">&lt;</span> <span class="nv">n</span> <span class="mi">2</span><span class="p">)</span> <span class="mi">1</span>
-</span><span class='line'>          <span class="p">(</span><span class="nb">*</span> <span class="nv">n</span> <span class="p">(</span><span class="nv">l</span> <span class="p">(</span><span class="nb">-</span> <span class="nv">n</span> <span class="mi">1</span><span class="p">)))))))</span>
+</span><span class='line'>   <span class="p">(</span><span class="nv">m</span> <span class="p">(</span><span class="nv">m</span> <span class="p">(</span><span class="nv">m</span> <span class="p">(</span><span class="nv">m</span> <span class="nv">?</span><span class="p">)))))</span>
+</span><span class='line'> <span class="p">(</span><span class="k">lambda</span> <span class="p">(</span><span class="nv">l</span><span class="p">)</span>
+</span><span class='line'>   <span class="p">(</span><span class="k">lambda</span> <span class="p">(</span><span class="nv">n</span><span class="p">)</span>
+</span><span class='line'>     <span class="p">(</span><span class="k">if</span> <span class="p">(</span><span class="nb">&lt;</span> <span class="nv">n</span> <span class="mi">2</span><span class="p">)</span> <span class="mi">1</span>
+</span><span class='line'>       <span class="p">(</span><span class="nb">*</span> <span class="nv">n</span> <span class="p">(</span><span class="nv">l</span> <span class="p">(</span><span class="nb">-</span> <span class="nv">n</span> <span class="mi">1</span><span class="p">)))))))</span>
 </span></code></pre></td></tr></table></div></figure>
 
 
@@ -245,11 +245,11 @@
 <span class='line-number'>5</span>
 <span class='line-number'>6</span>
 </pre></td><td class='code'><pre><code class='lisp'><span class='line'><span class="p">((</span><span class="k">lambda</span> <span class="p">(</span><span class="nv">m</span><span class="p">)</span>
-</span><span class='line'>  <span class="p">(</span><span class="nv">m</span> <span class="nv">m</span><span class="p">))</span>
-</span><span class='line'>    <span class="p">(</span><span class="k">lambda</span> <span class="p">(</span><span class="nv">l</span><span class="p">)</span>
-</span><span class='line'>      <span class="p">(</span><span class="k">lambda</span> <span class="p">(</span><span class="nv">n</span><span class="p">)</span>
-</span><span class='line'>        <span class="p">(</span><span class="k">if</span> <span class="p">(</span><span class="nb">&lt;</span> <span class="nv">n</span> <span class="mi">2</span><span class="p">)</span> <span class="mi">1</span>
-</span><span class='line'>          <span class="p">(</span><span class="nb">*</span> <span class="nv">n</span> <span class="p">(</span><span class="nv">l</span> <span class="p">(</span><span class="nb">-</span> <span class="nv">n</span> <span class="mi">1</span><span class="p">)))))))</span>
+</span><span class='line'>   <span class="p">(</span><span class="nv">m</span> <span class="nv">m</span><span class="p">))</span>
+</span><span class='line'> <span class="p">(</span><span class="k">lambda</span> <span class="p">(</span><span class="nv">l</span><span class="p">)</span>
+</span><span class='line'>   <span class="p">(</span><span class="k">lambda</span> <span class="p">(</span><span class="nv">n</span><span class="p">)</span>
+</span><span class='line'>     <span class="p">(</span><span class="k">if</span> <span class="p">(</span><span class="nb">&lt;</span> <span class="nv">n</span> <span class="mi">2</span><span class="p">)</span> <span class="mi">1</span>
+</span><span class='line'>       <span class="p">(</span><span class="nb">*</span> <span class="nv">n</span> <span class="p">(</span><span class="nv">l</span> <span class="p">(</span><span class="nb">-</span> <span class="nv">n</span> <span class="mi">1</span><span class="p">)))))))</span>
 </span></code></pre></td></tr></table></div></figure>
 
 
@@ -265,9 +265,9 @@
 <span class='line-number'>3</span>
 <span class='line-number'>4</span>
 </pre></td><td class='code'><pre><code class='lisp'><span class='line'><span class="p">((</span><span class="k">lambda</span> <span class="p">(</span><span class="nv">m</span><span class="p">)</span>
-</span><span class='line'>  <span class="p">(</span><span class="nv">m</span> <span class="nv">m</span><span class="p">))</span>
-</span><span class='line'>    <span class="p">(</span><span class="k">lambda</span> <span class="p">(</span><span class="nv">l</span><span class="p">)</span>
-</span><span class='line'>      <span class="p">(</span><span class="nv">l</span> <span class="nv">l</span><span class="p">)))</span>
+</span><span class='line'>   <span class="p">(</span><span class="nv">m</span> <span class="nv">m</span><span class="p">))</span>
+</span><span class='line'> <span class="p">(</span><span class="k">lambda</span> <span class="p">(</span><span class="nv">l</span><span class="p">)</span>
+</span><span class='line'>   <span class="p">(</span><span class="nv">l</span> <span class="nv">l</span><span class="p">)))</span>
 </span></code></pre></td></tr></table></div></figure>
 
 
@@ -281,11 +281,11 @@
 <span class='line-number'>5</span>
 <span class='line-number'>6</span>
 </pre></td><td class='code'><pre><code class='lisp'><span class='line'><span class="p">((</span><span class="k">lambda</span> <span class="p">(</span><span class="nv">m</span><span class="p">)</span>
-</span><span class='line'>  <span class="p">(</span><span class="nv">m</span> <span class="nv">m</span><span class="p">))</span>
-</span><span class='line'>    <span class="p">(</span><span class="k">lambda</span> <span class="p">(</span><span class="nv">l</span><span class="p">)</span>
-</span><span class='line'>      <span class="p">(</span><span class="k">lambda</span> <span class="p">(</span><span class="nv">n</span><span class="p">)</span>
-</span><span class='line'>        <span class="p">(</span><span class="k">if</span> <span class="p">(</span><span class="nb">&lt;</span> <span class="nv">n</span> <span class="mi">2</span><span class="p">)</span> <span class="mi">1</span>
-</span><span class='line'>          <span class="p">(</span><span class="nb">*</span> <span class="nv">n</span> <span class="p">((</span><span class="nv">l</span> <span class="nv">l</span><span class="p">)</span> <span class="p">(</span><span class="nb">-</span> <span class="nv">n</span> <span class="mi">1</span><span class="p">)))))))</span>
+</span><span class='line'>   <span class="p">(</span><span class="nv">m</span> <span class="nv">m</span><span class="p">))</span>
+</span><span class='line'> <span class="p">(</span><span class="k">lambda</span> <span class="p">(</span><span class="nv">l</span><span class="p">)</span>
+</span><span class='line'>   <span class="p">(</span><span class="k">lambda</span> <span class="p">(</span><span class="nv">n</span><span class="p">)</span>
+</span><span class='line'>     <span class="p">(</span><span class="k">if</span> <span class="p">(</span><span class="nb">&lt;</span> <span class="nv">n</span> <span class="mi">2</span><span class="p">)</span> <span class="mi">1</span>
+</span><span class='line'>       <span class="p">(</span><span class="nb">*</span> <span class="nv">n</span> <span class="p">((</span><span class="nv">l</span> <span class="nv">l</span><span class="p">)</span> <span class="p">(</span><span class="nb">-</span> <span class="nv">n</span> <span class="mi">1</span><span class="p">)))))))</span>
 </span></code></pre></td></tr></table></div></figure>
 
 
@@ -313,13 +313,13 @@
 <span class='line-number'>7</span>
 <span class='line-number'>8</span>
 </pre></td><td class='code'><pre><code class='lisp'><span class='line'><span class="p">((</span><span class="k">lambda</span> <span class="p">(</span><span class="nv">m</span><span class="p">)</span>
-</span><span class='line'>  <span class="p">(</span><span class="nv">m</span> <span class="nv">m</span><span class="p">))</span>
-</span><span class='line'>    <span class="p">(</span><span class="k">lambda</span> <span class="p">(</span><span class="nv">l</span><span class="p">)</span>
-</span><span class='line'>      <span class="p">((</span><span class="k">lambda</span> <span class="p">(</span><span class="nv">f</span><span class="p">)</span>
-</span><span class='line'>        <span class="p">(</span><span class="k">if</span> <span class="p">(</span><span class="nb">&lt;</span> <span class="nv">n</span> <span class="mi">2</span><span class="p">)</span> <span class="mi">1</span>
-</span><span class='line'>          <span class="p">(</span><span class="nb">*</span> <span class="nv">n</span> <span class="p">(</span><span class="nv">f</span> <span class="p">(</span><span class="nb">-</span> <span class="nv">n</span> <span class="mi">1</span><span class="p">)))))</span>
-</span><span class='line'>            <span class="p">(</span><span class="k">lambda</span> <span class="p">(</span><span class="nv">x</span><span class="p">)</span>
-</span><span class='line'>              <span class="p">((</span><span class="nv">l</span> <span class="nv">l</span><span class="p">)</span> <span class="nv">x</span><span class="p">)))))</span>
+</span><span class='line'>   <span class="p">(</span><span class="nv">m</span> <span class="nv">m</span><span class="p">))</span>
+</span><span class='line'> <span class="p">(</span><span class="k">lambda</span> <span class="p">(</span><span class="nv">l</span><span class="p">)</span>
+</span><span class='line'>   <span class="p">((</span><span class="k">lambda</span> <span class="p">(</span><span class="nv">f</span><span class="p">)</span>
+</span><span class='line'>      <span class="p">(</span><span class="k">if</span> <span class="p">(</span><span class="nb">&lt;</span> <span class="nv">n</span> <span class="mi">2</span><span class="p">)</span> <span class="mi">1</span>
+</span><span class='line'>        <span class="p">(</span><span class="nb">*</span> <span class="nv">n</span> <span class="p">(</span><span class="nv">f</span> <span class="p">(</span><span class="nb">-</span> <span class="nv">n</span> <span class="mi">1</span><span class="p">)))))</span>
+</span><span class='line'>    <span class="p">(</span><span class="k">lambda</span> <span class="p">(</span><span class="nv">x</span><span class="p">)</span>
+</span><span class='line'>      <span class="p">((</span><span class="nv">l</span> <span class="nv">l</span><span class="p">)</span> <span class="nv">x</span><span class="p">)))))</span>
 </span></code></pre></td></tr></table></div></figure>
 
 
@@ -349,15 +349,15 @@
 <span class='line-number'>9</span>
 <span class='line-number'>10</span>
 </pre></td><td class='code'><pre><code class='lisp'><span class='line'><span class="p">((</span><span class="k">lambda</span> <span class="p">(</span><span class="nv">fac</span><span class="p">)</span>
-</span><span class='line'>  <span class="p">((</span><span class="k">lambda</span> <span class="p">(</span><span class="nv">m</span><span class="p">)</span>
-</span><span class='line'>    <span class="p">(</span><span class="nv">m</span> <span class="nv">m</span><span class="p">))</span>
+</span><span class='line'>   <span class="p">((</span><span class="k">lambda</span> <span class="p">(</span><span class="nv">m</span><span class="p">)</span>
+</span><span class='line'>      <span class="p">(</span><span class="nv">m</span> <span class="nv">m</span><span class="p">))</span>
 </span><span class='line'>    <span class="p">(</span><span class="k">lambda</span> <span class="p">(</span><span class="nv">l</span><span class="p">)</span>
 </span><span class='line'>      <span class="p">(</span><span class="nv">fac</span> <span class="p">(</span><span class="k">lambda</span> <span class="p">(</span><span class="nv">x</span><span class="p">)</span>
-</span><span class='line'>           <span class="p">((</span><span class="nv">l</span> <span class="nv">l</span><span class="p">)</span> <span class="nv">x</span><span class="p">))))))</span>
-</span><span class='line'>            <span class="p">(</span><span class="k">lambda</span> <span class="p">(</span><span class="nv">f</span><span class="p">)</span>
-</span><span class='line'>             <span class="p">(</span><span class="k">lambda</span> <span class="p">(</span><span class="nv">n</span><span class="p">)</span>
-</span><span class='line'>                                         <span class="p">(</span><span class="k">if</span> <span class="p">(</span><span class="nb">&lt;</span> <span class="nv">n</span> <span class="mi">2</span><span class="p">)</span> <span class="mi">1</span>
-</span><span class='line'>                                                  <span class="p">(</span><span class="nb">*</span> <span class="nv">n</span> <span class="p">(</span><span class="nv">f</span> <span class="p">(</span><span class="nb">-</span> <span class="nv">n</span> <span class="mi">1</span><span class="p">)))))))</span>
+</span><span class='line'>             <span class="p">((</span><span class="nv">l</span> <span class="nv">l</span><span class="p">)</span> <span class="nv">x</span><span class="p">))))))</span>
+</span><span class='line'> <span class="p">(</span><span class="k">lambda</span> <span class="p">(</span><span class="nv">f</span><span class="p">)</span>
+</span><span class='line'>   <span class="p">(</span><span class="k">lambda</span> <span class="p">(</span><span class="nv">n</span><span class="p">)</span>
+</span><span class='line'>     <span class="p">(</span><span class="k">if</span> <span class="p">(</span><span class="nb">&lt;</span> <span class="nv">n</span> <span class="mi">2</span><span class="p">)</span> <span class="mi">1</span>
+</span><span class='line'>       <span class="p">(</span><span class="nb">*</span> <span class="nv">n</span> <span class="p">(</span><span class="nv">f</span> <span class="p">(</span><span class="nb">-</span> <span class="nv">n</span> <span class="mi">1</span><span class="p">)))))))</span>
 </span></code></pre></td></tr></table></div></figure>
 
 
@@ -371,9 +371,9 @@
 <span class='line-number'>5</span>
 </pre></td><td class='code'><pre><code class='lisp'><span class='line'><span class="p">((</span><span class="k">lambda</span> <span class="p">(</span><span class="nv">m</span><span class="p">)</span>
 </span><span class='line'>   <span class="p">(</span><span class="nv">m</span> <span class="nv">m</span><span class="p">))</span>
-</span><span class='line'>    <span class="p">(</span><span class="k">lambda</span> <span class="p">(</span><span class="nv">l</span><span class="p">)</span>
-</span><span class='line'>       <span class="p">(</span><span class="nv">fac</span> <span class="p">(</span><span class="k">lambda</span> <span class="p">(</span><span class="nv">x</span><span class="p">)</span>
-</span><span class='line'>                 <span class="p">((</span><span class="nv">l</span> <span class="nv">l</span><span class="p">)</span> <span class="nv">x</span><span class="p">)))))</span>
+</span><span class='line'> <span class="p">(</span><span class="k">lambda</span> <span class="p">(</span><span class="nv">l</span><span class="p">)</span>
+</span><span class='line'>   <span class="p">(</span><span class="nv">fac</span> <span class="p">(</span><span class="k">lambda</span> <span class="p">(</span><span class="nv">x</span><span class="p">)</span>
+</span><span class='line'>          <span class="p">((</span><span class="nv">l</span> <span class="nv">l</span><span class="p">)</span> <span class="nv">x</span><span class="p">)))))</span>
 </span></code></pre></td></tr></table></div></figure>
 
 
@@ -387,9 +387,9 @@
 <span class='line-number'>5</span>
 </pre></td><td class='code'><pre><code class='lisp'><span class='line'><span class="p">(</span><span class="nv">define</span> <span class="nv">Y</span>
 </span><span class='line'>  <span class="p">(</span><span class="k">lambda</span> <span class="p">(</span><span class="nv">fun</span><span class="p">)</span>
-</span><span class='line'>      <span class="p">((</span><span class="k">lambda</span> <span class="p">(</span><span class="nv">m</span><span class="p">)</span> <span class="p">(</span><span class="nv">m</span> <span class="nv">m</span><span class="p">))</span>
-</span><span class='line'>           <span class="p">(</span><span class="k">lambda</span> <span class="p">(</span><span class="nv">m</span><span class="p">)</span>
-</span><span class='line'>                  <span class="p">(</span><span class="nv">fun</span> <span class="p">(</span><span class="k">lambda</span> <span class="p">(</span><span class="nv">x</span><span class="p">)</span> <span class="p">((</span><span class="nv">m</span> <span class="nv">m</span><span class="p">)</span> <span class="nv">x</span><span class="p">)))))))</span>
+</span><span class='line'>    <span class="p">((</span><span class="k">lambda</span> <span class="p">(</span><span class="nv">m</span><span class="p">)</span> <span class="p">(</span><span class="nv">m</span> <span class="nv">m</span><span class="p">))</span>
+</span><span class='line'>     <span class="p">(</span><span class="k">lambda</span> <span class="p">(</span><span class="nv">m</span><span class="p">)</span>
+</span><span class='line'>       <span class="p">(</span><span class="nv">fun</span> <span class="p">(</span><span class="k">lambda</span> <span class="p">(</span><span class="nv">x</span><span class="p">)</span> <span class="p">((</span><span class="nv">m</span> <span class="nv">m</span><span class="p">)</span> <span class="nv">x</span><span class="p">)))))))</span>
 </span></code></pre></td></tr></table></div></figure>
 
 
@@ -402,8 +402,8 @@
 <span class='line-number'>4</span>
 </pre></td><td class='code'><pre><code class='lisp'><span class='line'><span class="p">((</span><span class="nv">Y</span> <span class="p">(</span><span class="k">lambda</span> <span class="p">(</span><span class="nv">len</span><span class="p">)</span>
 </span><span class='line'>      <span class="p">(</span><span class="k">lambda</span> <span class="p">(</span><span class="nv">lst</span><span class="p">)</span>
-</span><span class='line'>              <span class="p">(</span><span class="k">if</span> <span class="p">(</span><span class="nv">null?</span> <span class="nv">lst</span><span class="p">)</span> <span class="mi">0</span>
-</span><span class='line'>                          <span class="p">(</span><span class="nb">+</span> <span class="mi">1</span> <span class="p">(</span><span class="nv">len</span> <span class="p">(</span><span class="nb">cdr</span> <span class="nv">lst</span><span class="p">)))))))</span> <span class="o">&#39;</span><span class="p">(</span><span class="nv">a</span> <span class="nv">b</span> <span class="nv">c</span> <span class="nv">e</span><span class="p">))</span>
+</span><span class='line'>        <span class="p">(</span><span class="k">if</span> <span class="p">(</span><span class="nv">null?</span> <span class="nv">lst</span><span class="p">)</span> <span class="mi">0</span>
+</span><span class='line'>          <span class="p">(</span><span class="nb">+</span> <span class="mi">1</span> <span class="p">(</span><span class="nv">len</span> <span class="p">(</span><span class="nb">cdr</span> <span class="nv">lst</span><span class="p">)))))))</span> <span class="o">&#39;</span><span class="p">(</span><span class="nv">a</span> <span class="nv">b</span> <span class="nv">c</span> <span class="nv">e</span><span class="p">))</span>
 </span></code></pre></td></tr></table></div></figure>
 
 
