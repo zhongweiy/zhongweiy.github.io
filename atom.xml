@@ -4,7 +4,7 @@
   <title><![CDATA[我的笔记]]></title>
   <link href="http://zhongweiy.github.io/atom.xml" rel="self"/>
   <link href="http://zhongweiy.github.io/"/>
-  <updated>2015-09-11T14:29:42+08:00</updated>
+  <updated>2015-09-11T14:31:37+08:00</updated>
   <id>http://zhongweiy.github.io/</id>
   <author>
     <name><![CDATA[zw]]></name>
@@ -15,9 +15,9 @@
   
   <entry>
     <title type="html"><![CDATA[理解Y Combinator]]></title>
-    <link href="http://zhongweiy.github.io/blog/2015/07/18/li-jie-y-combinator/"/>
-    <updated>2015-07-18T12:36:11+08:00</updated>
-    <id>http://zhongweiy.github.io/blog/2015/07/18/li-jie-y-combinator</id>
+    <link href="http://zhongweiy.github.io/blog/2015/01/18/li-jie-y-combinator/"/>
+    <updated>2015-01-18T12:36:11+08:00</updated>
+    <id>http://zhongweiy.github.io/blog/2015/01/18/li-jie-y-combinator</id>
     <content type="html"><![CDATA[<p>很多次看到Y combinator, 但是一直没有好好理解它。<a href="http://www.amazon.com/The-Little-Schemer-4th-Edition/dp/0262560992">The Little Schemer</a>上也有一章讲Y combinator讲得很详细的。不过当时看了没有理解明白。真正理解它的方式还是自己来推导一遍最好。</p>
 
 <h2>为什么要有Y combinator</h2>
