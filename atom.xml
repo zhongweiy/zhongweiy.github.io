@@ -4,7 +4,7 @@
   <title><![CDATA[我的笔记]]></title>
   <link href="http://zhongweiy.github.io/atom.xml" rel="self"/>
   <link href="http://zhongweiy.github.io/"/>
-  <updated>2015-09-11T14:24:36+08:00</updated>
+  <updated>2015-09-11T14:29:42+08:00</updated>
   <id>http://zhongweiy.github.io/</id>
   <author>
     <name><![CDATA[zw]]></name>
@@ -350,9 +350,9 @@
   
   <entry>
     <title type="html"><![CDATA[Hello]]></title>
-    <link href="http://zhongweiy.github.io/blog/2015/07/16/hello/"/>
-    <updated>2015-07-16T18:52:12+08:00</updated>
-    <id>http://zhongweiy.github.io/blog/2015/07/16/hello</id>
+    <link href="http://zhongweiy.github.io/blog/2015/01/16/hello/"/>
+    <updated>2015-01-16T18:52:12+08:00</updated>
+    <id>http://zhongweiy.github.io/blog/2015/01/16/hello</id>
     <content type="html"><![CDATA[<p>Hello!</p>
 ]]></content>
   </entry>
