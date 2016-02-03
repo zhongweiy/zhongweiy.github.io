@@ -4,7 +4,7 @@
   <title><![CDATA[我的笔记]]></title>
   <link href="http://zhongweiy.github.io/atom.xml" rel="self"/>
   <link href="http://zhongweiy.github.io/"/>
-  <updated>2016-02-03T17:11:29+08:00</updated>
+  <updated>2016-02-03T17:14:56+08:00</updated>
   <id>http://zhongweiy.github.io/</id>
   <author>
     <name><![CDATA[zw]]></name>
@@ -29,9 +29,7 @@
 <!-- more -->
 
 
-<p>My emacs&rsquo;s version is 24.5.1 and runs on Mac OS 10.11. There is no default dbus support on Mac OS.</p>
-
-<p>After take a look at the call-stack of this error, it turns out that it could be fixed by customize our own &lsquo;org-show-notification&rsquo;. (It may be solved by installing dbus on Mac OS, but I have not tried it.)</p>
+<p>My emacs&rsquo;s version is 24.5.1 and runs on Mac OS 10.11. The error is caused by no default dbus support on Mac OS. It may be solved by installing dbus on Mac OS. I have not tried it. Because after take a look at the call-stack of this error, it turns out that it could be fixed by customize our own &lsquo;org-show-notification&rsquo;.</p>
 
 <figure class='code'><figcaption><span>call-stack </span></figcaption>
 <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
