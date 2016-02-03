@@ -4,7 +4,7 @@
   <title><![CDATA[我的笔记]]></title>
   <link href="http://zhongweiy.github.io/atom.xml" rel="self"/>
   <link href="http://zhongweiy.github.io/"/>
-  <updated>2016-02-03T17:01:45+08:00</updated>
+  <updated>2016-02-03T17:06:27+08:00</updated>
   <id>http://zhongweiy.github.io/</id>
   <author>
     <name><![CDATA[zw]]></name>
@@ -139,24 +139,18 @@
   
   <entry>
     <title type="html"><![CDATA[Speed Up Big Matrix Multiplication on ARM Platform]]></title>
-    <link href="http://zhongweiy.github.io/blog/2015/09/11/how-to-speed-up-big-matrix-multiplication-on-arm-platform/"/>
+    <link href="http://zhongweiy.github.io/blog/2015/09/11/how-to-speed-up-big-matrix-multiplication-on-arm-platform.markdown/"/>
     <updated>2015-09-11T15:03:02+08:00</updated>
-    <id>http://zhongweiy.github.io/blog/2015/09/11/how-to-speed-up-big-matrix-multiplication-on-arm-platform</id>
-    <content type="html"><![CDATA[<p>Cache is important. Here is an interesting case show how important cache is in performance optimization.</p>
+    <id>http://zhongweiy.github.io/blog/2015/09/11/how-to-speed-up-big-matrix-multiplication-on-arm-platform.markdown</id>
+    <content type="html"><![CDATA[Cache is important. Here is an interesting case show how important cache is in performance optimization.
 
-<h2>Speed up matrix multiplication by SIMD</h2>
-
-<p>SIMD is a good tool to speed up computation. If you want to speed up matrix multiplication on your cellphone, using NEON is a good choice. You may assume it could give you at least 2 timers faster result. OK, let&rsquo;s check.</p>
-
-<h3>Matrix multiplication</h3>
-
-<p>Here is your matrix multiplication function:</p>
-
+## Speed up matrix multiplication by SIMD
+SIMD is a good tool to speed up computation. If you want to speed up matrix multiplication on your cellphone, using NEON is a good choice. You may assume it could give you at least 2 timers faster result. OK, let's check.
+### Matrix multiplication
+Here is your matrix multiplication function:
 <figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 </pre></td><td class='code'><pre><code class='c'><span class='line'>
-</span></code></pre></td></tr></table></div></figure>
-
-]]></content>
+</span></code></pre></td></tr></table></div></figure>]]></content>
   </entry>
   
   <entry>
