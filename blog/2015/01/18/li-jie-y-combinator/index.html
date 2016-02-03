@@ -117,8 +117,7 @@
 </span></code></pre></td></tr></table></div></figure>
 
 
-<p>    <br/>
-这个函数里的?是我们暂时不知道要放什么的地方。不过就暂时这样的话，也能计算阶乘1和2，比如下面的计算就是可以计算1的阶乘：</p>
+<p>这个函数里的?是我们暂时不知道要放什么的地方。不过就暂时这样的话，也能计算阶乘1和2，比如下面的计算就是可以计算1的阶乘：</p>
 
 <figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
@@ -146,8 +145,7 @@
 </span></code></pre></td></tr></table></div></figure>
 
 
-<p>     <br/>
- 把这个函数展开:</p>
+<p> 把这个函数展开:</p>
 
 <figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
@@ -181,8 +179,7 @@
 </span></code></pre></td></tr></table></div></figure>
 
 
-<p>             <br/>
-你也可以在上面加入一点功能，让它能求3的阶乘：</p>
+<p>你也可以在上面加入一点功能，让它能求3的阶乘：</p>
 
 <figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
@@ -199,8 +196,7 @@
 </span></code></pre></td></tr></table></div></figure>
 
 
-<p>             <br/>
-也可以再加入4的阶乘的求解：</p>
+<p>也可以再加入4的阶乘的求解：</p>
 
 <figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
@@ -217,8 +213,7 @@
 </span></code></pre></td></tr></table></div></figure>
 
 
-<p>             <br/>
-然后是5的阶乘：</p>
+<p>然后是5的阶乘：</p>
 
 <figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
@@ -235,8 +230,7 @@
 </span></code></pre></td></tr></table></div></figure>
 
 
-<p>             <br/>
-你会发现，这样挺累的。。。另外，你也注意到了在上面的求3，4，5的阶乘函数里的?是什么其实不重要。那就把它换成m吧！如下：</p>
+<p>你会发现，这样挺累的。。。另外，你也注意到了在上面的求3，4，5的阶乘函数里的?是什么其实不重要。那就把它换成m吧！如下：</p>
 
 <figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
@@ -253,8 +247,7 @@
 </span></code></pre></td></tr></table></div></figure>
 
 
-<p>             <br/>
-但是这还是没达到我们的目的。上面的还是只能求1和2的阶乘。</p>
+<p>但是这还是没达到我们的目的。上面的还是只能求1和2的阶乘。</p>
 
 <h2>那个神奇的函数</h2>
 
@@ -271,8 +264,7 @@
 </span></code></pre></td></tr></table></div></figure>
 
 
-<p>     <br/>
-想一想，把这个想法应用到前面最后我们转化的函数上：</p>
+<p>想一想，把这个想法应用到前面最后我们转化的函数上：</p>
 
 <figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
@@ -323,8 +315,7 @@
 </span></code></pre></td></tr></table></div></figure>
 
 
-<p>                                     <br/>
-进一步抽像出:</p>
+<p>进一步抽像出:</p>
 
 <figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
@@ -335,8 +326,7 @@
 </span></code></pre></td></tr></table></div></figure>
 
 
-<p>    <br/>
-就可以得到:</p>
+<p>就可以得到:</p>
 
 <figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
@@ -361,8 +351,7 @@
 </span></code></pre></td></tr></table></div></figure>
 
 
-<p>                                                <br/>
-而上面的部分:</p>
+<p>而上面的部分:</p>
 
 <figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
@@ -377,8 +366,7 @@
 </span></code></pre></td></tr></table></div></figure>
 
 
-<p>               <br/>
-就是Y combinator，更规范一些的定义是:</p>
+<p>就是Y combinator，更规范一些的定义是:</p>
 
 <figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
@@ -393,8 +381,7 @@
 </span></code></pre></td></tr></table></div></figure>
 
 
-<p>                <br/>
-这个函数Y接收一个参数fun,返回这个函数自身。举一个例子:</p>
+<p>这个函数Y接收一个参数fun,返回这个函数自身。举一个例子:</p>
 
 <figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
@@ -407,8 +394,7 @@
 </span></code></pre></td></tr></table></div></figure>
 
 
-<p>                        <br/>
-以上函数返回4.</p>
+<p>以上函数返回4.</p>
 </div>
 
 
@@ -442,6 +428,8 @@
         <a class="basic-alignment left" href="/blog/2015/01/16/hello/" title="Previous Post: hello">&laquo; hello</a>
       
       
+        <a class="basic-alignment right" href="/blog/2015/09/11/how-to-speed-up-big-matrix-multiplication-on-arm-platform/" title="Next Post: Speed up big matrix multiplication on ARM platform">Speed up big matrix multiplication on ARM platform &raquo;</a>
+      
     </p>
   </footer>
 </article>
@@ -459,6 +447,14 @@
     <section>
   <h1>Recent Posts</h1>
   <ul id="recent_posts">
+    
+      <li class="post">
+        <a href="/blog/2016/02/03/solve-error-emacs-not-compiled-with-dbus-support/">Solve Error: Emacs Not Compiled With Dbus Support</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2015/09/11/how-to-speed-up-big-matrix-multiplication-on-arm-platform/">Speed Up Big Matrix Multiplication on ARM Platform</a>
+      </li>
     
       <li class="post">
         <a href="/blog/2015/01/18/li-jie-y-combinator/">理解Y Combinator</a>
@@ -482,7 +478,7 @@
     </div>
   </div>
   <footer role="contentinfo"><p>
-  Copyright &copy; 2015 - zw -
+  Copyright &copy; 2016 - zw -
   <span class="credit">Powered by <a href="http://octopress.org">Octopress</a></span>
 </p>
 

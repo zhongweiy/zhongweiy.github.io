@@ -5,12 +5,11 @@
 <!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
 <head>
   <meta charset="utf-8">
-  <title>Hello - 我的笔记</title>
+  <title>Speed Up Big Matrix Multiplication on ARM Platform - 我的笔记</title>
   <meta name="author" content="zw">
 
   
-  <meta name="description" content="Hello!
-">
+  <meta name="description" content="Cache is important. Here is an interesting case show how important cache is in performance optimization. Speed up matrix multiplication by SIMD SIMD &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -19,7 +18,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
 
   
-  <link rel="canonical" href="http://zhongweiy.github.io/blog/2015/01/16/hello/">
+  <link rel="canonical" href="http://zhongweiy.github.io/blog/2015/09/11/how-to-speed-up-big-matrix-multiplication-on-arm-platform/">
   <link href="/favicon.png" rel="icon">
   <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
   <link href="/atom.xml" rel="alternate" title="我的笔记" type="application/atom+xml">
@@ -67,7 +66,7 @@
   
   <header>
     
-      <h1 class="entry-title">Hello</h1>
+      <h1 class="entry-title">Speed Up Big Matrix Multiplication on ARM Platform</h1>
     
     
       <p class="meta">
@@ -76,14 +75,27 @@
 
 
 
-<time class='entry-date' datetime='2015-01-16T18:52:12+08:00'><span class='date'><span class='date-month'>Jan</span> <span class='date-day'>16</span><span class='date-suffix'>th</span>, <span class='date-year'>2015</span></span> <span class='time'>6:52 pm</span></time>
+<time class='entry-date' datetime='2015-09-11T15:03:02+08:00'><span class='date'><span class='date-month'>Sep</span> <span class='date-day'>11</span><span class='date-suffix'>th</span>, <span class='date-year'>2015</span></span> <span class='time'>3:03 pm</span></time>
         
       </p>
     
   </header>
 
 
-<div class="entry-content"><p>Hello!</p>
+<div class="entry-content"><p>Cache is important. Here is an interesting case show how important cache is in performance optimization.</p>
+
+<h2>Speed up matrix multiplication by SIMD</h2>
+
+<p>SIMD is a good tool to speed up computation. If you want to speed up matrix multiplication on your cellphone, using NEON is a good choice. You may assume it could give you at least 2 timers faster result. OK, let&rsquo;s check.</p>
+
+<h3>Matrix multiplication</h3>
+
+<p>Here is your matrix multiplication function:</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='c'><span class='line'>
+</span></code></pre></td></tr></table></div></figure>
+
 </div>
 
 
@@ -99,7 +111,7 @@
 
 
 
-<time class='entry-date' datetime='2015-01-16T18:52:12+08:00'><span class='date'><span class='date-month'>Jan</span> <span class='date-day'>16</span><span class='date-suffix'>th</span>, <span class='date-year'>2015</span></span> <span class='time'>6:52 pm</span></time>
+<time class='entry-date' datetime='2015-09-11T15:03:02+08:00'><span class='date'><span class='date-month'>Sep</span> <span class='date-day'>11</span><span class='date-suffix'>th</span>, <span class='date-year'>2015</span></span> <span class='time'>3:03 pm</span></time>
       
 
 
@@ -114,8 +126,10 @@
     
     <p class="meta">
       
+        <a class="basic-alignment left" href="/blog/2015/01/18/li-jie-y-combinator/" title="Previous Post: 理解Y combinator">&laquo; 理解Y combinator</a>
       
-        <a class="basic-alignment right" href="/blog/2015/01/18/li-jie-y-combinator/" title="Next Post: 理解Y combinator">理解Y combinator &raquo;</a>
+      
+        <a class="basic-alignment right" href="/blog/2016/02/03/solve-error-emacs-not-compiled-with-dbus-support/" title="Next Post: solve error: Emacs not compiled with dbus support">solve error: Emacs not compiled with dbus support &raquo;</a>
       
     </p>
   </footer>
@@ -177,8 +191,8 @@
       
         
         // var disqus_developer = 1;
-        var disqus_identifier = 'http://zhongweiy.github.io/blog/2015/01/16/hello/';
-        var disqus_url = 'http://zhongweiy.github.io/blog/2015/01/16/hello/';
+        var disqus_identifier = 'http://zhongweiy.github.io/blog/2015/09/11/how-to-speed-up-big-matrix-multiplication-on-arm-platform/';
+        var disqus_url = 'http://zhongweiy.github.io/blog/2015/09/11/how-to-speed-up-big-matrix-multiplication-on-arm-platform/';
         var disqus_script = 'embed.js';
       
     (function () {

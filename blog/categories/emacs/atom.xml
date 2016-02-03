@@ -1,0 +1,143 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+  <title><![CDATA[Category: Emacs | 我的笔记]]></title>
+  <link href="http://zhongweiy.github.io/blog/categories/emacs/atom.xml" rel="self"/>
+  <link href="http://zhongweiy.github.io/"/>
+  <updated>2016-02-03T17:01:45+08:00</updated>
+  <id>http://zhongweiy.github.io/</id>
+  <author>
+    <name><![CDATA[zw]]></name>
+    
+  </author>
+  <generator uri="http://octopress.org/">Octopress</generator>
+
+  
+  <entry>
+    <title type="html"><![CDATA[Solve Error: Emacs Not Compiled With Dbus Support]]></title>
+    <link href="http://zhongweiy.github.io/blog/2016/02/03/solve-error-emacs-not-compiled-with-dbus-support/"/>
+    <updated>2016-02-03T16:06:53+08:00</updated>
+    <id>http://zhongweiy.github.io/blog/2016/02/03/solve-error-emacs-not-compiled-with-dbus-support</id>
+    <content type="html"><![CDATA[<p>When use the org-pomodora mode, emacs runs into following error:
+<figure class='code'><figcaption><span>error </span></figcaption>
+<div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='lisp'><span class='line'><span class="nv">dbus-call-method:</span> <span class="nv">peculiar</span> <span class="nv">error:</span> <span class="nv">&amp;ldquo</span><span class="c1">;Emacs not compiled with dbus support&amp;rdquo;</span>
+</span></code></pre></td></tr></table></div></figure></p>
+
+<!-- more -->
+
+
+<p>My emacs&rsquo;s version is 24.5.1 and runs on Mac OS 10.11. There is no default dbus support on Mac OS.</p>
+
+<p>After take a look at the call-stack of this error, it turns out that it could be fixed by customize our own &lsquo;org-show-notification&rsquo;. (It may be solved by installing dbus on Mac OS, but I have not tried it.)</p>
+
+<p><figure class='code'><figcaption><span>call-stack </span></figcaption>
+<div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+</pre></td><td class='code'><pre><code class='lisp'><span class='line'><span class="nv">Debugger</span> <span class="nv">entered&amp;ndash</span><span class="c1">;Lisp error: (dbus-error &amp;ldquo;Emacs not compiled with dbus support&amp;rdquo;)</span>
+</span><span class='line'>  <span class="nb">signal</span><span class="p">(</span><span class="nv">dbus-error</span> <span class="p">(</span><span class="nv">&amp;ldquo</span><span class="c1">;Emacs not compiled with dbus support&amp;rdquo;))</span>
+</span><span class='line'>  <span class="nv">dbus-call-method</span><span class="p">(</span><span class="ss">:session</span> <span class="nv">&amp;ldquo</span><span class="c1">;org.freedesktop.Notifications&amp;rdquo; &amp;ldquo;/org/freedesktop/Notifications&amp;rdquo; &amp;ldquo;org.freedesktop.Notifications&amp;rdquo; &amp;ldquo;Notify&amp;rdquo; :string &amp;ldquo;Emacs&amp;rdquo; :uint32 0 :string &amp;ldquo;/Applications/Emacs.app/Contents/Resources/etc/images/icons/hicolor/scalable/apps/emacs.svg&amp;rdquo; :string &amp;ldquo;Org-mode message&amp;rdquo; :string &amp;ldquo;Task &amp;lsquo;Network exercise R23-R26&amp;rsquo; should be finished by now. (2)&amp;rdquo; (:array) ((:dict-entry &amp;ldquo;urgency&amp;rdquo; (:variant :byte 0))) :int32 -1)</span>
+</span><span class='line'>  <span class="nv">byte-code</span><span class="p">(</span><span class="nv">&amp;ldquo</span><span class="c1">;&amp;hellip;&amp;rdquo; [params id y x transient resident plist-get :bus :session :title :body :app-name :replaces-id :app-icon :actions :timeout nil :urgency :category :desktop-entry :image-data :image-path :action-items :sound-file :sound-name :suppress-sound :resident :transient :x :y :dict-entry &amp;ldquo;urgency&amp;rdquo; :variant :byte low 0 critical 2 1 append &amp;ldquo;category&amp;rdquo; :string &amp;ldquo;desktop-entry&amp;rdquo; &amp;ldquo;image-data&amp;rdquo; :struct &amp;ldquo;image-path&amp;rdquo; &amp;ldquo;action-items&amp;rdquo; :boolean &amp;ldquo;sound-file&amp;rdquo; &amp;ldquo;sound-name&amp;rdquo; &amp;hellip;] 25)</span>
+</span><span class='line'>  <span class="nv">notifications-notify</span><span class="p">(</span><span class="ss">:title</span> <span class="nv">&amp;ldquo</span><span class="c1">;Org-mode message&amp;rdquo; :body &amp;ldquo;Task &amp;lsquo;Network exercise R23-R26&amp;rsquo; should be finished by now. (2)&amp;rdquo; :urgency low)</span>
+</span><span class='line'>  <span class="nv">org-show-notification</span><span class="p">(</span><span class="nv">&amp;ldquo</span><span class="c1">;Task &amp;lsquo;Test org-pomodoro&amp;rsquo; should be finished by now. (2)&amp;rdquo;)</span>
+</span><span class='line'>  <span class="nv">org-notify</span><span class="p">(</span><span class="nv">&amp;ldquo</span><span class="c1">;Task &amp;lsquo;Network exercise R23-R26&amp;rsquo; should be finished by now. (2)&amp;rdquo; nil)</span>
+</span><span class='line'>  <span class="nv">org-clock-notify-once-if-expired</span><span class="p">()</span>
+</span><span class='line'>  <span class="nv">org-clock-update-mode-line</span><span class="p">()</span>
+</span><span class='line'>  <span class="nv">byte-code</span><span class="p">(</span><span class="nv">&amp;ldquo</span><span class="c1">;&amp;hellip;&amp;rdquo; [org-clock-resolving-clocks-due-to-idleness org-clock-resolving-clocks org-clock-leftover-time leftover org&amp;ndash;msg-extra target-pos org-clocking-p nil &amp;ldquo;&amp;rdquo; t org-resolve-clocks (64) org-clock-in (4) org-clock-select-task &amp;ldquo;Clock-in on task: &amp;rdquo; copy-marker error &amp;ldquo;Abort&amp;rdquo; (16) org-clock-mark-default-task org-back-to-heading marker-buffer marker-position 4 org-heading-components message &amp;ldquo;Clock continues in \&amp;rdquo;%s\&amp;ldquo;&amp;rdquo; throw abort org-clock-out org-at-heading-p point-at-bol 0 org-base-buffer run-hooks org-clock-in-prepare-hook org-clock-history-push functionp looking-at match-string 2 org-todo &amp;ldquo;[  ]&lt;em&gt;&amp;rdquo; &amp;ldquo;\&gt;&amp;rdquo; replace-regexp-in-string &amp;ldquo;\[\[.&lt;/em&gt;?\]\[\(.*?\)\]\]&amp;rdquo; &amp;ldquo;\1&amp;rdquo; match-string-no-properties &amp;ldquo;???&amp;rdquo; &amp;hellip;] 8)</span>
+</span><span class='line'>  <span class="nv">org-clock-in</span><span class="p">(</span><span class="no">nil</span><span class="p">)</span>
+</span><span class='line'>  <span class="nv">call-interactively</span><span class="p">(</span><span class="nv">org-clock-in</span><span class="p">)</span>
+</span><span class='line'>  <span class="p">(</span><span class="nb">cond</span> <span class="p">((</span><span class="nb">equal</span> <span class="nv">arg</span> <span class="p">(</span><span class="k">quote</span> <span class="p">(</span><span class="mi">4</span><span class="p">)))</span> <span class="p">(</span><span class="k">let</span> <span class="p">((</span><span class="nv">current-prefix-arg</span> <span class="p">(</span><span class="k">quote</span> <span class="p">(</span><span class="mi">4</span><span class="p">))))</span> <span class="p">(</span><span class="nv">call-interactively</span> <span class="p">(</span><span class="k">quote</span> <span class="nv">org-clock-in</span><span class="p">))))</span> <span class="p">((</span><span class="nb">equal</span> <span class="nv">arg</span> <span class="p">(</span><span class="k">quote</span> <span class="p">(</span><span class="mi">16</span><span class="p">)))</span> <span class="p">(</span><span class="nv">call-interactively</span> <span class="p">(</span><span class="k">quote</span> <span class="nv">org-clock-in-last</span><span class="p">)))</span> <span class="p">((</span><span class="nb">eq</span> <span class="nv">major-mode</span> <span class="p">(</span><span class="k">quote</span> <span class="nv">org-mode</span><span class="p">))</span> <span class="p">(</span><span class="nv">call-interactively</span> <span class="p">(</span><span class="k">quote</span> <span class="nv">org-clock-in</span><span class="p">)))</span> <span class="p">((</span><span class="nb">eq</span> <span class="nv">major-mode</span> <span class="p">(</span><span class="k">quote</span> <span class="nv">org-agenda-mode</span><span class="p">))</span> <span class="p">(</span><span class="k">let</span> <span class="p">((</span><span class="nv">&amp;ndash</span><span class="c1">;mpom (org-get-at-bol (quote org-hd-marker)))) (save-excursion (if (markerp &amp;ndash;mpom) (set-buffer (marker-buffer &amp;ndash;mpom))) (save-excursion (save-restriction (widen) (goto-char (or &amp;ndash;mpom &amp;hellip;)) (call-interactively (quote org-clock-in))))))) (t (let ((current-prefix-arg (quote (4)))) (call-interactively (quote org-clock-in)))))</span>
+</span><span class='line'>  <span class="p">(</span><span class="k">if</span> <span class="p">(</span><span class="nv">org-pomodoro-active-p</span><span class="p">)</span> <span class="p">(</span><span class="k">if</span> <span class="p">(</span><span class="nb">or</span> <span class="p">(</span><span class="nb">not</span> <span class="nv">org-pomodoro-ask-upon-killing</span><span class="p">)</span> <span class="p">(</span><span class="nb">y-or-n-p</span> <span class="nv">&amp;ldquo</span><span class="c1">;There is already a running timer.  Would you like to stop it? &amp;rdquo;)) (org-pomodoro-kill) (message &amp;ldquo;Alright, keep up the good work!&amp;rdquo;)) (cond ((equal arg (quote (4))) (let ((current-prefix-arg (quote (4)))) (call-interactively (quote org-clock-in)))) ((equal arg (quote (16))) (call-interactively (quote org-clock-in-last))) ((eq major-mode (quote org-mode)) (call-interactively (quote org-clock-in))) ((eq major-mode (quote org-agenda-mode)) (let ((&amp;ndash;mpom (org-get-at-bol (quote org-hd-marker)))) (save-excursion (if (markerp &amp;ndash;mpom) (set-buffer (marker-buffer &amp;ndash;mpom))) (save-excursion (save-restriction (widen) (goto-char &amp;hellip;) (call-interactively &amp;hellip;)))))) (t (let ((current-prefix-arg (quote (4)))) (call-interactively (quote org-clock-in))))) (org-pomodoro-start :pomodoro))</span>
+</span><span class='line'>  <span class="nv">org-pomodoro</span><span class="p">(</span><span class="no">nil</span><span class="p">)</span>
+</span><span class='line'>  <span class="nv">call-interactively</span><span class="p">(</span><span class="nv">org-pomodoro</span> <span class="no">nil</span> <span class="no">nil</span><span class="p">)</span>
+</span><span class='line'>  <span class="nv">command-execute</span><span class="p">(</span><span class="nv">org-pomodoro</span><span class="p">)</span>
+</span></code></pre></td></tr></table></div></figure></p>
+
+<h2>Solution</h2>
+
+<p>Here are the steps:</p>
+
+<ol>
+<li><p>install terminal-notifier
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'>brew install terminal-notifier
+</span></code></pre></td></tr></table></div></figure></p></li>
+<li><p>add terminal-notifier interface to your emacs (<a href="https://gist.github.com/justinhj/eb2d354d06631076566f">refer</a>):
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+</pre></td><td class='code'><pre><code class='lisp'><span class='line'><span class="c1">;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;</span>
+</span><span class='line'><span class="c1">;; Terminal notifier</span>
+</span><span class='line'><span class="c1">;; requires &amp;lsquo;brew install terminal-notifier&amp;rsquo;</span>
+</span><span class='line'><span class="c1">;; stolen from erc-notifier&lt;/p&gt;&lt;/li&gt;</span>
+</span><span class='line'><span class="nv">&lt;/ol&gt;</span>
+</span><span class='line'>
+</span><span class='line'>
+</span><span class='line'><span class="nv">&lt;p&gt;</span><span class="p">(</span><span class="nb">defvar</span> <span class="nv">terminal-notifier-command</span> <span class="p">(</span><span class="nv">executable-find</span> <span class="nv">&amp;ldquo</span><span class="c1">;terminal-notifier&amp;rdquo;) &amp;ldquo;The path to terminal-notifier.&amp;rdquo;)&lt;/p&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="nv">&lt;p&gt;</span><span class="c1">; (terminal-notifier-notify &amp;ldquo;Emacs notification&amp;rdquo; &amp;ldquo;Something amusing happened&amp;rdquo;)&lt;/p&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="nv">&lt;p&gt;</span><span class="p">(</span><span class="nb">defun</span> <span class="nv">terminal-notifier-notify</span> <span class="p">(</span><span class="nv">title</span> <span class="nv">message</span><span class="p">)</span>
+</span><span class='line'>  <span class="nv">&amp;ldquo</span><span class="c1">;Show a message with &lt;code&gt;terminal-notifier-command&lt;/code&gt;.&amp;rdquo;</span>
+</span><span class='line'>  <span class="p">(</span><span class="nv">start-process</span> <span class="nv">&amp;ldquo</span><span class="c1">;terminal-notifier&amp;rdquo;</span>
+</span><span class='line'>                 <span class="nv">&amp;ldquo</span><span class="c1">;&lt;em&gt;terminal-notifier&lt;/em&gt;&amp;rdquo;</span>
+</span><span class='line'>                 <span class="nv">terminal-notifier-command</span>
+</span><span class='line'>                 <span class="nv">&amp;ldquo</span><span class="c1">;-title&amp;rdquo; title</span>
+</span><span class='line'>                 <span class="nv">&amp;ldquo</span><span class="c1">;-message&amp;rdquo; message</span>
+</span><span class='line'>                 <span class="nv">&amp;ldquo</span><span class="c1">;-activate&amp;rdquo; &amp;ldquo;org.gnu.Emacs&amp;rdquo;))&lt;/p&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="nv">&lt;p&gt;</span><span class="p">(</span><span class="nb">defun</span> <span class="nv">timed-notification</span> <span class="p">(</span><span class="nb">time</span> <span class="nv">msg</span><span class="p">)</span>
+</span><span class='line'>  <span class="p">(</span><span class="nv">interactive</span> <span class="nv">&amp;ldquo</span><span class="c1">;sNotification when (e.g: 2 minutes, 60 seconds, 3 days): \nsMessage: &amp;rdquo;)</span>
+</span><span class='line'>  <span class="p">(</span><span class="nv">run-at-time</span> <span class="nb">time</span> <span class="no">nil</span> <span class="p">(</span><span class="k">lambda</span> <span class="p">(</span><span class="nv">msg</span><span class="p">)</span> <span class="p">(</span><span class="nv">terminal-notifier-notify</span> <span class="nv">&amp;ldquo</span><span class="c1">;Emacs&amp;rdquo; msg)) msg))</span>
+</span></code></pre></td></tr></table></div></figure></p>
+
+<ol>
+<li>customize your org-show-notification-handler
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class='lisp'><span class='line'><span class="p">(</span><span class="k">setq</span> <span class="nv">org-show-notification-handler</span>
+</span><span class='line'>  <span class="p">(</span><span class="k">lambda</span> <span class="p">(</span><span class="nv">msg</span><span class="p">)</span> <span class="p">(</span><span class="nv">timed-notification</span> <span class="no">nil</span> <span class="nv">msg</span><span class="p">)))</span>
+</span></code></pre></td></tr></table></div></figure></li>
+</ol>
+
+
+<p>Done.</p>
+]]></content>
+  </entry>
+  
+</feed>

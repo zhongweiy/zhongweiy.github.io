@@ -9,7 +9,8 @@
   <meta name="author" content="zw">
 
   
-  <meta name="description" content="很多次看到Y combinator, 但是一直没有好好理解它。The Little Schemer上也有一章讲Y combinator讲得很详细的。不过当时看了没有理解明白。真正理解它的方式还是自己来推导一遍最好。 为什么要有Y combinator ">
+  <meta name="description" content="When use the org-pomodora mode, emacs runs into following error: error 1
+dbus-call-method: peculiar error: &quot;Emacs not compiled with dbus support &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -63,6 +64,88 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2016/02/03/solve-error-emacs-not-compiled-with-dbus-support/">Solve Error: Emacs Not Compiled With Dbus Support</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+<time class='entry-date' datetime='2016-02-03T16:06:53+08:00'><span class='date'><span class='date-month'>Feb</span> <span class='date-day'>3</span><span class='date-suffix'>rd</span>, <span class='date-year'>2016</span></span> <span class='time'>4:06 pm</span></time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>When use the org-pomodora mode, emacs runs into following error:</p>
+
+<figure class='code'><figcaption><span>error </span></figcaption>
+<div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='lisp'><span class='line'><span class="nv">dbus-call-method:</span> <span class="nv">peculiar</span> <span class="nv">error:</span> <span class="s">&quot;Emacs not compiled with dbus support&quot;</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+</div>
+  
+  
+    <footer>
+      <a rel="full-article" href="/blog/2016/02/03/solve-error-emacs-not-compiled-with-dbus-support/">Read on &rarr;</a>
+    </footer>
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2015/09/11/how-to-speed-up-big-matrix-multiplication-on-arm-platform/">Speed Up Big Matrix Multiplication on ARM Platform</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+<time class='entry-date' datetime='2015-09-11T15:03:02+08:00'><span class='date'><span class='date-month'>Sep</span> <span class='date-day'>11</span><span class='date-suffix'>th</span>, <span class='date-year'>2015</span></span> <span class='time'>3:03 pm</span></time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>Cache is important. Here is an interesting case show how important cache is in performance optimization.</p>
+
+<h2>Speed up matrix multiplication by SIMD</h2>
+
+<p>SIMD is a good tool to speed up computation. If you want to speed up matrix multiplication on your cellphone, using NEON is a good choice. You may assume it could give you at least 2 timers faster result. OK, let&rsquo;s check.</p>
+
+<h3>Matrix multiplication</h3>
+
+<p>Here is your matrix multiplication function:</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='c'><span class='line'>
+</span></code></pre></td></tr></table></div></figure>
+
+</div>
+  
+  
+
+
+    </article>
   
   
     <article>
@@ -142,6 +225,14 @@
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/blog/2016/02/03/solve-error-emacs-not-compiled-with-dbus-support/">Solve Error: Emacs Not Compiled With Dbus Support</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2015/09/11/how-to-speed-up-big-matrix-multiplication-on-arm-platform/">Speed Up Big Matrix Multiplication on ARM Platform</a>
+      </li>
+    
+      <li class="post">
         <a href="/blog/2015/01/18/li-jie-y-combinator/">理解Y Combinator</a>
       </li>
     
@@ -162,7 +253,7 @@
     </div>
   </div>
   <footer role="contentinfo"><p>
-  Copyright &copy; 2015 - zw -
+  Copyright &copy; 2016 - zw -
   <span class="credit">Powered by <a href="http://octopress.org">Octopress</a></span>
 </p>
 
