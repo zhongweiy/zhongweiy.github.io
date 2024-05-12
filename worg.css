@@ -988,3 +988,16 @@
 	overflow: auto;
     }
 } /* END OF @media screen */
+
+@media screen and (max-width: 600px) {
+  .title {
+    font-size: 1.5em; /* Adjust the font size as needed */
+  }
+  #org-div-home-and-up {
+    text-align: center;
+  }
+  #org-div-home-and-up a {
+    display: block;
+    margin-bottom: 5px; /* Add some spacing between links */
+  }
+}
