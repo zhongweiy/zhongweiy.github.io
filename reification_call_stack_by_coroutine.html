@@ -5,7 +5,7 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>LuaJIT bad FFI callback issue</title>
+<title>Reification call stack by coroutine</title>
 <meta name="generator" content="Org Mode" />
 <style>
   #content { max-width: 60em; margin: auto; }
@@ -199,266 +199,168 @@
  <a accesskey="H" href="index.html"> HOME </a>
  <a accesskey="A" href="about.html"> about </a>
 </div><div id="content" class="content">
-<h1 class="title">LuaJIT bad FFI callback issue</h1>
+<h1 class="title">Reification call stack by coroutine</h1>
 <p>
-LuaJIT's FFI is super fast. It is even faster than C/C++'s dynamic library call and 40x times faster than Golang's CGO <a href="https://github.com/dyu/ffi-overhead">(reference)</a>. But there is one thing not allowed:
+From the article <a href="https://www.chiark.greenend.org.uk/~sgtatham/quasiblog/coroutines-philosophy/">Philosophy of coroutines</a>, the author mentions a 'stunf' of coroutines:
 </p>
 <blockquote>
 <p>
-an FFI call into a C function get JIT-compiled, which in turn calls a callback, calling into Lua again.
-</p>
-</blockquote>
-<p>
-When it happends, user will have a "bad callback" error.
-</p>
-
-<div id="outline-container-org1b9d2d0" class="outline-2">
-<h2 id="org1b9d2d0">What is a LuaJIT FFI callback?</h2>
-<div class="outline-text-2" id="text-org1b9d2d0">
-<p>
-LuaJIT FFI callback is a lua function, which is called by FFI C code.
-</p>
-</div>
-</div>
-
-<div id="outline-container-org26c4132" class="outline-2">
-<h2 id="org26c4132">An example to trigger the bad callback issue.</h2>
-<div class="outline-text-2" id="text-org26c4132">
-<div class="org-src-container">
-<pre class="src src-lua">-- save to file test.lua
-local ffi = require("ffi")
-
-ffi.cdef [[
-    typedef int (*my_fn_t)(int);
-    int f2();
-    void setup(my_fn_t f, int);
-]]
-
-local lib = ffi.load("test")
-
-function setup(cb, a)
-  lib.setup(cb, a)
-end
-
-function f0()
-  -- The FFI call to f2(), which is defined in C library test.so. 
-  return lib.f2() + 1
-end
-
-do
-  local cb = ffi.cast("my_fn_t",
-                      -- This is the FFI callback function.
-                      function(a)
-                        return a
-  end)
-
-  for i=1,100 do
-    if i == 80 then setup(cb, 10) end
-    f0()
-  end
-end      
-</pre>
-</div>
-
-<div class="org-src-container">
-<pre class="src src-c">// save to file lib.c
-// and compile it to a shared libary:
-//   gcc -Wall -O -g -o libtest.so -fpic -shared lib.c
-// put libtest.so under the same path of test.lua
-typedef int (*my_fn_t)(int);
-
-my_fn_t gf = 0;
-int ga;
-
-void setup(my_fn_t f, int a) {
-  gf = f;
-  ga = a;
-}
-
-int f2() {
-  if (gf == 0) { // this is necessary to escape the auto-detection.
-    return 3;
-  } else {
-    return gf(ga) + 1;
-  }
-}  
-</pre>
-</div>
-
-<p>
-And then, run it will give us the "bad callback" error:
-</p>
-<div class="org-src-container">
-<pre class="src src-shell">$luajit test.lua
-PANIC: unprotected error in call to Lua API (bad callback)
-</pre>
-</div>
-
-<p>
-Run it with trace dump will show that the f0() call is compiled by the JIT compiler:
-</p>
-<pre class="example">
----- TRACE 1 start test.lua:27
-0022  ISNEN    6   0      ; 80
-0023  JMP      7 =&gt; 0028
-0028  GGET     7   9      ; "f0"
-0029  CALL     7   1   1
-0000  . FUNCF    2          ; test.lua:15
-0001  . UGET     0   0      ; lib
-0002  . TGETS    0   0   0  ; "f2"
-0000  . . . FUNCC               ; ffi.clib.__index
-0003  . CALL     0   2   1
-0000  . . FUNCC               ; ffi.meta.__call // FFI call at line: 17 in test.lua is compiled.
-0004  . ADDVN    0   0   0  ; 1
-0005  . RET1     0   2
-0030  FORL     3 =&gt; 0022  
-</pre>
-
-<p>
-The call chain is like: Trace 1 -&gt; lib.f2() -&gt; lua callback function.
-</p>
-</div>
-</div>
-
-<div id="outline-container-orga0d7101" class="outline-2">
-<h2 id="orga0d7101">LuaJIT's bad callback auto detection feature</h2>
-<div class="outline-text-2" id="text-orga0d7101">
-<p>
-In some case, LuaJIT can automatically detect bad callback and disable the JIT compilation for the related FFI call. Here is a slightly modified example from previous example.
-</p>
-
-<div class="org-src-container">
-<pre class="src src-lua">local ffi = require("ffi")
-
-ffi.cdef [[
-    typedef int (*my_fn_t)(int);
-    int f2();
-    void setup(my_fn_t f, int);
-]]
-
-local lib = ffi.load("test")
-
-function setup(cb, a)
-  lib.setup(cb, a)
-end
-
-function f0()
-  -- The FFI call to f2(), which is defined in C library test.so. 
-  return lib.f2() + 1
-end
-
-do
-  local cb = ffi.cast("my_fn_t",
-                      -- This is the FFI callback function.
-                      function(a)
-                        return a
-  end)
-
-  local cb2 = ffi.cast("my_fn_t",
-                      -- This is the FFI callback function.
-                      function(a)
-                        return a+1
-  end)
-
-  setup(cb, 10)
-
-  for i=1,100 do
-    if i == 80 then setup(cb2, 10) end
-    f0()
-  end
-end      
-</pre>
-</div>
-
-<div class="org-src-container">
-<pre class="src src-c">typedef int (*my_fn_t)(int);
-
-my_fn_t gf = 0;
-int ga;
-
-void setup(my_fn_t f, int a) {
-  gf = f;
-  ga = a;
-}
-
-int f2() {
-  // f2 will always call a Lua callback.
-  return gf(ga) + 1;
-}
-</pre>
-</div>
-
-<p>
-This example can run without bad callback error. And from the dumped trace, we can see the JIT compilation for the FFI call in f0() is aborted and it is added to backlist. So there is no JIT compiled FFI call, it is safe to do lua callback in the C code now.
-</p>
-<pre class="example">
----- TRACE 1 start test1.lua:35
-0030  ISNEN    7   0      ; 80
-0031  JMP      8 =&gt; 0036
-0036  GGET     8   9      ; "f0"
-0037  CALL     8   1   1
-0000  . FUNCF    2          ; test1.lua:15
-0001  . UGET     0   0      ; lib
-0002  . TGETS    0   0   0  ; "f2"
-0000  . . . FUNCC               ; ffi.clib.__index
-0003  . CALL     0   2   1
-0000  . . FUNCC               ; ffi.meta.__call
----- TRACE 1 abort test1.lua:17 -- blacklisted
-</pre>
-
-<p>
-The same effect can be achieved by manually turning off JIT compilation in the first test case:
-</p>
-<div class="org-src-container">
-<pre class="src src-lua">do
-  local cb = ffi.cast("my_fn_t",
-                      -- This is the FFI callback function.
-                      function(a)
-                        return a
-  end)
-
-  jit.off(f0)
-
-  for i=1,100 do
-    if i == 80 then setup(cb, 10) end
-    f0()
-  end
-end   
-</pre>
-</div>
-</div>
-</div>
-
-<div id="outline-container-org9f37083" class="outline-2">
-<h2 id="org9f37083">Why the auto detection can not always catches the LuaJIT FFI callback case?</h2>
-<div class="outline-text-2" id="text-org9f37083">
-<p>
-Because the auto detection takes effect only during LuaJIT trace compilation and in the first case, when the trace is compiled, there is no FFI callback. Since we deliberately only set the callback in the lua loop code when i == 80. So in the later iteration of the looping (i &gt; 80), there is FFI callback, which is not expected in the compiled trace. And we can not change the compiled code at this time. The assumption “not allow an FFI call into a C function get JIT-compiled” is broken. It then runs into error “bad callback”.
-</p>
-</div>
-</div>
-
-<div id="outline-container-org464db57" class="outline-2">
-<h2 id="org464db57">How other VMs solve this issue?</h2>
-<div class="outline-text-2" id="text-org464db57">
-<p>
-In the "Trace-based Just-in-Time Type Specialization for Dynamic Languages by Andreas Gal etc." paper section 6.5, there is a description for the similar situation:
-</p>
-<blockquote>
-<p>
-Another problem is that external functions can reenter the interpreter by calling scripts, which in turn again might want to access the call stack or global variables. To address this problem, we made the VM set a flag whenever the interpreter is reentered while a compiled trace is running.
-Every call to an external function then checks this flag and exits the trace immediately after returning from the external function call if it is set. There are many external functions that seldom or never reenter, and they can be called without problem, and will cause trace exit only if necessary.
+Another slightly unexpected ‘stunt’ use of coroutines is to use them to reconstruct the call-stack structure of ordinary subroutines: replace every normal function call with a coroutine-style yield operation which makes a newly constructed instance of the subroutine start running next, and whenever a coroutine terminates, resume the one that invoked it.
 </p>
 </blockquote>
 
 <p>
-This approach seems like will cause issue in LuaJIT. When the callback function is hot enough and got compiled &#x2013; let's say previous FFI call is compiled to Trace 1. This hot callback function is compiled to Trace 2 &#x2013; then the some state will be modified in Trace 2, which is likely unexpected in Trace 1. When returning to Trace 1 from Trace 2, error will probably occur due to corrupted state. However, it is worth giving it a try.
+This reminds me Daniel Friedman's <a href="https://legacy.cs.indiana.edu/~dfried/mex.pdf">The Role of the Study of Programming Languages in the Education of a Programmer"</a>. The code below is also a correctness-preserved transformation.
 </p>
+
+<p>
+Here is my try in Lua, in which coroutine is first-class value.
+</p>
+
+<p>
+We want to transfer some recursive function to the form with explicit call stack structure. Here is an example of counting element of array in recursive style:
+</p>
+<div class="org-src-container">
+<pre class="src src-lua">local function length_rec(t)
+  if t == nil or #t == 0 then
+    return 0
+  end
+
+  return 1 + length_rec({table.unpack(t, 2)})
+end
+</pre>
+</div>
+
+<p>
+And re-write it with coroutine will be:
+</p>
+<div class="org-src-container">
+<pre class="src src-lua">local function length(t)
+  if t == nil or #t == 0 then
+    coroutine.yield("ret", 0)
+  else
+    local l = coroutine.yield("call", {table.unpack(t, 2)})
+    coroutine.yield("ret", l + 1)
+  end
+end
+</pre>
+</div>
+
+<p>
+And we need to create infrastructure to run this coroutine style function. Here is one possible implementation:
+</p>
+<div class="org-src-container">
+<pre class="src src-lua">local function run(f, arg)
+  local init_co = coroutine.create(f)
+  local stacks = {{init_co, "init", arg}}
+
+  while #stacks ~= 0 do
+    local frame = stacks[#stacks]
+    local co  = frame[1]
+    local frame_type = frame[2]
+    local frame_val = frame[3]
+
+    if frame_type == "ret" then
+      table.remove(stacks)
+
+      if #stacks == 0 then
+        return frame_val
+      else
+        co = stacks[#stacks][1]
+      end
+    elseif frame_type == "call" then
+      co = coroutine.create(f)
+      -- else frame_type == "init" then
+      --  just use the current frame.
+    end
+    local _, new_frame_type, new_frame_val = coroutine.resume(co, frame_val)
+    if frame_type == "ret" or frame_type == "init" then
+      stacks[#stacks][2] = new_frame_type
+      stacks[#stacks][3] = new_frame_val
+    else
+      table.insert(stacks, {co, new_frame_type, new_frame_val})
+    end
+  end
+end
+</pre>
+</div>
+
+<p>
+And run it:
+</p>
+<div class="org-src-container">
+<pre class="src src-lua">print(run(length, {1, 2, 3, 4}))
+-- print 4
+</pre>
+</div>
+
+<p>
+Then here is another a little bit more complex example:
+</p>
+<div class="org-src-container">
+<pre class="src src-lua">  local function tree_sum(t)
+  if t == nil then
+    coroutine.yield("ret", 0)
+  else
+    local l = coroutine.yield("call", t['left'])
+    local r = coroutine.yield("call", t['right'])
+    coroutine.yield("ret", l + r + t['v'])
+  end
+end
+</pre>
+</div>
+
+<p>
+Run it:
+</p>
+<div class="org-src-container">
+<pre class="src src-lua">print(executor(tree_sum, {v=1, left={v=2, left={v=4}}, right={v=3, right={v=5}}}))
+-- print 15
+</pre>
+</div>
+
+<div id="outline-container-org235e2c5" class="outline-2">
+<h2 id="org235e2c5">Application of the tranformation</h2>
+<div class="outline-text-2" id="text-org235e2c5">
+<p>
+The following case will run into "stack overflow" error.
+</p>
+<div class="org-src-container">
+<pre class="src src-lua">local function sum_rec(n)
+  if n == 0 then
+    return 0
+  else
+    local s = sum_rec(n - 1)
+    return s + n
+  end
+end
+
+print(sum_rec(1000000))
+</pre>
+</div>
+
+<p>
+But with this transformation and re-written, it can produce result correctly:
+</p>
+<div class="org-src-container">
+<pre class="src src-lua">local function sum(n)
+  if n == 0 then
+    coroutine.yield("ret", 0)
+  else
+    local s = coroutine.yield("call", n - 1)
+    coroutine.yield("ret", s + n)
+  end
+end
+
+print(executor(sum, 1000000))
+-- print 500000500000
+</pre>
+</div>
 </div>
 </div>
 </div>
 <div id="postamble" class="status">
-<p class="date">Date: 2024-05-04 Sat 00:00</p>
+<p class="date">Date: 2024-05-12 Sun 00:00</p>
 </div>
 </body>
 </html>
