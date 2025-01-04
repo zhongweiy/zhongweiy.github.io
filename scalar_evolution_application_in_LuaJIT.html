@@ -207,9 +207,9 @@ the LuaJIT several months ago
 how Scalar Evolution result is used to do optimization.
 </p>
 
-<div id="outline-container-orgbc26f07" class="outline-2">
-<h2 id="orgbc26f07">what is Scalar Evolution?</h2>
-<div class="outline-text-2" id="text-orgbc26f07">
+<div id="outline-container-org4b3ae29" class="outline-2">
+<h2 id="org4b3ae29">what is Scalar Evolution?</h2>
+<div class="outline-text-2" id="text-org4b3ae29">
 <p>
 While Scalar Evolution analysis (SE) can become complex in static
 compiler when we try to capture more cases (<a href="https://sbaziotis.com/compilers/introduction-to-scalar-evolution.html">example</a>). But in LuaJIT,
@@ -243,9 +243,9 @@ Bascially, it records <code>i</code>'s information: start <code>1</code>, end <c
 </div>
 </div>
 
-<div id="outline-container-orgafa27ed" class="outline-2">
-<h2 id="orgafa27ed">Two kinds of loop with different performance</h2>
-<div class="outline-text-2" id="text-orgafa27ed">
+<div id="outline-container-org43e4b15" class="outline-2">
+<h2 id="org43e4b15">Two kinds of loop with different performance</h2>
+<div class="outline-text-2" id="text-org43e4b15">
 <p>
 SE is used for array boundary check elimination (ABC
 elimination). ABC has non negligible performance overhead in safe
@@ -454,9 +454,9 @@ does not works with the <code>LOOP</code> Byte Code (BC), it only works with <co
 </div>
 </div>
 
-<div id="outline-container-org7369753" class="outline-2">
-<h2 id="org7369753">Strength reduction</h2>
-<div class="outline-text-2" id="text-org7369753">
+<div id="outline-container-org144b6e6" class="outline-2">
+<h2 id="org144b6e6">Strength reduction</h2>
+<div class="outline-text-2" id="text-org144b6e6">
 <p>
 When there is a CONV IR that convert integer with sign extention,
 Scalar Evolution result can also be used to simplify (eliminate) the

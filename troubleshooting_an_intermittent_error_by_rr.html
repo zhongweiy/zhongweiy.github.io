@@ -1,0 +1,660 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
+<head>
+<meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Troubleshooting an intermittent error by RR</title>
+<meta name="generator" content="Org Mode" />
+<style>
+  #content { max-width: 60em; margin: auto; }
+  .title  { text-align: center;
+             margin-bottom: .2em; }
+  .subtitle { text-align: center;
+              font-size: medium;
+              font-weight: bold;
+              margin-top:0; }
+  .todo   { font-family: monospace; color: red; }
+  .done   { font-family: monospace; color: green; }
+  .priority { font-family: monospace; color: orange; }
+  .tag    { background-color: #eee; font-family: monospace;
+            padding: 2px; font-size: 80%; font-weight: normal; }
+  .timestamp { color: #bebebe; }
+  .timestamp-kwd { color: #5f9ea0; }
+  .org-right  { margin-left: auto; margin-right: 0px;  text-align: right; }
+  .org-left   { margin-left: 0px;  margin-right: auto; text-align: left; }
+  .org-center { margin-left: auto; margin-right: auto; text-align: center; }
+  .underline { text-decoration: underline; }
+  #postamble p, #preamble p { font-size: 90%; margin: .2em; }
+  p.verse { margin-left: 3%; }
+  pre {
+    border: 1px solid #e6e6e6;
+    border-radius: 3px;
+    background-color: #f2f2f2;
+    padding: 8pt;
+    font-family: monospace;
+    overflow: auto;
+    margin: 1.2em;
+  }
+  pre.src {
+    position: relative;
+    overflow: auto;
+  }
+  pre.src:before {
+    display: none;
+    position: absolute;
+    top: -8px;
+    right: 12px;
+    padding: 3px;
+    color: #555;
+    background-color: #f2f2f299;
+  }
+  pre.src:hover:before { display: inline; margin-top: 14px;}
+  /* Languages per Org manual */
+  pre.src-asymptote:before { content: 'Asymptote'; }
+  pre.src-awk:before { content: 'Awk'; }
+  pre.src-authinfo::before { content: 'Authinfo'; }
+  pre.src-C:before { content: 'C'; }
+  /* pre.src-C++ doesn't work in CSS */
+  pre.src-clojure:before { content: 'Clojure'; }
+  pre.src-css:before { content: 'CSS'; }
+  pre.src-D:before { content: 'D'; }
+  pre.src-ditaa:before { content: 'ditaa'; }
+  pre.src-dot:before { content: 'Graphviz'; }
+  pre.src-calc:before { content: 'Emacs Calc'; }
+  pre.src-emacs-lisp:before { content: 'Emacs Lisp'; }
+  pre.src-fortran:before { content: 'Fortran'; }
+  pre.src-gnuplot:before { content: 'gnuplot'; }
+  pre.src-haskell:before { content: 'Haskell'; }
+  pre.src-hledger:before { content: 'hledger'; }
+  pre.src-java:before { content: 'Java'; }
+  pre.src-js:before { content: 'Javascript'; }
+  pre.src-latex:before { content: 'LaTeX'; }
+  pre.src-ledger:before { content: 'Ledger'; }
+  pre.src-lisp:before { content: 'Lisp'; }
+  pre.src-lilypond:before { content: 'Lilypond'; }
+  pre.src-lua:before { content: 'Lua'; }
+  pre.src-matlab:before { content: 'MATLAB'; }
+  pre.src-mscgen:before { content: 'Mscgen'; }
+  pre.src-ocaml:before { content: 'Objective Caml'; }
+  pre.src-octave:before { content: 'Octave'; }
+  pre.src-org:before { content: 'Org mode'; }
+  pre.src-oz:before { content: 'OZ'; }
+  pre.src-plantuml:before { content: 'Plantuml'; }
+  pre.src-processing:before { content: 'Processing.js'; }
+  pre.src-python:before { content: 'Python'; }
+  pre.src-R:before { content: 'R'; }
+  pre.src-ruby:before { content: 'Ruby'; }
+  pre.src-sass:before { content: 'Sass'; }
+  pre.src-scheme:before { content: 'Scheme'; }
+  pre.src-screen:before { content: 'Gnu Screen'; }
+  pre.src-sed:before { content: 'Sed'; }
+  pre.src-sh:before { content: 'shell'; }
+  pre.src-sql:before { content: 'SQL'; }
+  pre.src-sqlite:before { content: 'SQLite'; }
+  /* additional languages in org.el's org-babel-load-languages alist */
+  pre.src-forth:before { content: 'Forth'; }
+  pre.src-io:before { content: 'IO'; }
+  pre.src-J:before { content: 'J'; }
+  pre.src-makefile:before { content: 'Makefile'; }
+  pre.src-maxima:before { content: 'Maxima'; }
+  pre.src-perl:before { content: 'Perl'; }
+  pre.src-picolisp:before { content: 'Pico Lisp'; }
+  pre.src-scala:before { content: 'Scala'; }
+  pre.src-shell:before { content: 'Shell Script'; }
+  pre.src-ebnf2ps:before { content: 'ebfn2ps'; }
+  /* additional language identifiers per "defun org-babel-execute"
+       in ob-*.el */
+  pre.src-cpp:before  { content: 'C++'; }
+  pre.src-abc:before  { content: 'ABC'; }
+  pre.src-coq:before  { content: 'Coq'; }
+  pre.src-groovy:before  { content: 'Groovy'; }
+  /* additional language identifiers from org-babel-shell-names in
+     ob-shell.el: ob-shell is the only babel language using a lambda to put
+     the execution function name together. */
+  pre.src-bash:before  { content: 'bash'; }
+  pre.src-csh:before  { content: 'csh'; }
+  pre.src-ash:before  { content: 'ash'; }
+  pre.src-dash:before  { content: 'dash'; }
+  pre.src-ksh:before  { content: 'ksh'; }
+  pre.src-mksh:before  { content: 'mksh'; }
+  pre.src-posh:before  { content: 'posh'; }
+  /* Additional Emacs modes also supported by the LaTeX listings package */
+  pre.src-ada:before { content: 'Ada'; }
+  pre.src-asm:before { content: 'Assembler'; }
+  pre.src-caml:before { content: 'Caml'; }
+  pre.src-delphi:before { content: 'Delphi'; }
+  pre.src-html:before { content: 'HTML'; }
+  pre.src-idl:before { content: 'IDL'; }
+  pre.src-mercury:before { content: 'Mercury'; }
+  pre.src-metapost:before { content: 'MetaPost'; }
+  pre.src-modula-2:before { content: 'Modula-2'; }
+  pre.src-pascal:before { content: 'Pascal'; }
+  pre.src-ps:before { content: 'PostScript'; }
+  pre.src-prolog:before { content: 'Prolog'; }
+  pre.src-simula:before { content: 'Simula'; }
+  pre.src-tcl:before { content: 'tcl'; }
+  pre.src-tex:before { content: 'TeX'; }
+  pre.src-plain-tex:before { content: 'Plain TeX'; }
+  pre.src-verilog:before { content: 'Verilog'; }
+  pre.src-vhdl:before { content: 'VHDL'; }
+  pre.src-xml:before { content: 'XML'; }
+  pre.src-nxml:before { content: 'XML'; }
+  /* add a generic configuration mode; LaTeX export needs an additional
+     (add-to-list 'org-latex-listings-langs '(conf " ")) in .emacs */
+  pre.src-conf:before { content: 'Configuration File'; }
+
+  table { border-collapse:collapse; }
+  caption.t-above { caption-side: top; }
+  caption.t-bottom { caption-side: bottom; }
+  td, th { vertical-align:top;  }
+  th.org-right  { text-align: center;  }
+  th.org-left   { text-align: center;   }
+  th.org-center { text-align: center; }
+  td.org-right  { text-align: right;  }
+  td.org-left   { text-align: left;   }
+  td.org-center { text-align: center; }
+  dt { font-weight: bold; }
+  .footpara { display: inline; }
+  .footdef  { margin-bottom: 1em; }
+  .figure { padding: 1em; }
+  .figure p { text-align: center; }
+  .equation-container {
+    display: table;
+    text-align: center;
+    width: 100%;
+  }
+  .equation {
+    vertical-align: middle;
+  }
+  .equation-label {
+    display: table-cell;
+    text-align: right;
+    vertical-align: middle;
+  }
+  .inlinetask {
+    padding: 10px;
+    border: 2px solid gray;
+    margin: 10px;
+    background: #ffffcc;
+  }
+  #org-div-home-and-up
+   { text-align: right; font-size: 70%; white-space: nowrap; }
+  textarea { overflow-x: auto; }
+  .linenr { font-size: smaller }
+  .code-highlighted { background-color: #ffff00; }
+  .org-info-js_info-navigation { border-style: none; }
+  #org-info-js_console-label
+    { font-size: 10px; font-weight: bold; white-space: nowrap; }
+  .org-info-js_search-highlight
+    { background-color: #ffff00; color: #000000; font-weight: bold; }
+  .org-svg { }
+</style>
+<link rel="stylesheet" href="./worg.css" type="text/css"/>
+</head>
+<body>
+<div id="org-div-home-and-up">
+<!-- <a accesskey="H" href=""> UP </a> -->
+ <a accesskey="H" href="index.html"> HOME </a>
+ <a accesskey="A" href="about.html"> about </a>
+</div><div id="content" class="content">
+<h1 class="title">Troubleshooting an intermittent error by RR</h1>
+<p>
+(this post is converted from <a href="https://konghq.com/blog/engineering/troubleshooting-an-intermittent-failure-on-arm64">https://konghq.com/blog/engineering/troubleshooting-an-intermittent-failure-on-arm64</a>)
+</p>
+
+<p>
+The Kong Gateway CI was failing intermittently (about once every 100 runs) on the ARM64 platform with a strange error: <code>attempt to perform arithmetic on local 'i' (a function value)</code>. The variable <code>i</code> in the context is an integer but at runtime, it was sometimes a function value.
+</p>
+
+<p>
+This is caused by an error in the LuaJIT ARM64 JIT compiler. This document describes how it is fixed by leveraging the Mozilla rr tool.
+</p>
+
+<div id="outline-container-orgc479821" class="outline-2">
+<h2 id="orgc479821">Narrow down the scope: Is the error in Lua code or elsewhere?</h2>
+<div class="outline-text-2" id="text-orgc479821">
+<p>
+The error when encountered was on line 3 in Kong's db init.lua code file.
+</p>
+<div class="org-src-container">
+<pre class="src src-lua">for i, primary_key_name in ipairs(primary_key_names) do
+   insert(argn_next, primary_key_name)
+   insert(pk_placeholders, placeholder(i + #fk_names))
+end
+</pre>
+</div>
+
+<p>
+Looking at the above code, the value i should be an integer, but the error says i is a function value. This error was only ever on ARM64 runners used in Kong CI. The first troubleshooting step was to check whether this error was caused by Lua code or other parts of Gateway — like the Nginx, LuaJIT, etc. This can be determined by disabling the JIT compilation for the function that contains the above code with: jit.off(new). After disabling JIT for the above function, the error was no longer reproducible. That means the error was caused by the underlying LuaJIT machine code generation.
+</p>
+</div>
+</div>
+
+<div id="outline-container-org3d3cadd" class="outline-2">
+<h2 id="org3d3cadd">Get deterministic results from random failure</h2>
+<div class="outline-text-2" id="text-org3d3cadd">
+<p>
+One hurdle to debugging the failure was the random nature of this error. It was seen in about one out of every 100 CI runs. A minimal reproducible test case was needed to help speed up fixing the issue. The tool we used is called reverse debugger: Mozilla rr. If we use the analogy of a core dump being akin to taking a picture of the program when it fails, the record file generated by rr is like taking a video of the program when it fails. Like a real video file, you can play it back and forth, with the record file from rr, you can run the failure program back and forth and always get the same result. This helps tremendously when the failure happens randomly.The CI runs our unit tests with the busted framework and is invoked normally like busted <code>spec/02-integration/03-db/01-db_spec.lua</code>
+</p>
+
+<div class="org-src-container">
+<pre class="src src-lua">unset KONG_VENV_ENV_FILE; unset KONG_VENV; unset KONG_PREFIX; export KONG_BUSTED_RESPAWNED=1; export KONG_IS_TESTING=1;
+
+count=0
+while resty --rr -j dump -c 4096 --http-conf 'lua_ssl_trusted_certificate ~/projects/kong/spec/fixtures/kong_spec.crt;'  'bin/busted' 'spec/02-integration/03-db/01-db_spec.lua' &gt; jit_dump_with_rr_bad_demo.log; do 
+  count=$((count+1));
+  echo $count; 
+done
+
+</pre>
+</div>
+
+<p>
+The above commands run the test file again and again until it fails. And at each run, it is recorded by rr (by the –rr switch in resty) and the LuaJIT dump (by the -j dump switch and the output is redirected to a file) logging is also turned on to help identify which JIT trace caused the failure. Other switches like -c , &#x2013;http-conf and environment variables are needed to run the test itself.
+</p>
+</div>
+</div>
+<div id="outline-container-org93d2e18" class="outline-2">
+<h2 id="org93d2e18">Debug the error with rr replay</h2>
+<div class="outline-text-2" id="text-org93d2e18">
+<p>
+Once the above command fails, we will have a file generated by rr. It usually is saved at ~/.local/share/rr/. And to replay this error, just run:
+</p>
+
+<pre class="example">
+rr replay
+</pre>
+
+<p>
+It will run in gdb like interface:
+</p>
+
+<pre class="example">
+Reading symbols from ~/.local/share/rr/nginx-589/mmap_hardlink_4_nginx...
+(gdb)
+</pre>
+
+<p>
+And we can run the “continue” command in gdb to run to the error:
+</p>
+
+<div class="org-src-container">
+<pre class="src src-lua">0 successes / 0 failures / 1 error / 0 pending : 9.803452 seconds
+
+Error -&gt; ./kong/db/strategies/postgres/init.lua @ 1441
+suite spec/02-integration/03-db/01-db_spec.lua
+./kong/db/strategies/postgres/init.lua:1441: attempt to perform arithmetic on local 'i' (a function value)
+
+stack traceback:
+        ./kong/db/strategies/postgres/init.lua:1441: in function 'new'
+        ./kong/db/strategies/init.lua:59: in function 'new'
+        ./kong/db/init.lua:95: in function 'new'
+        spec/02-integration/03-db/01-db_spec.lua:770: in main chunk
+
+
+Program received signal SIGKILL, Killed.
+0x0000000070000004 in syscall_traced ()
+(gdb) 
+</pre>
+</div>
+
+<p>
+In addition to running the “continue” command, we can also run the “reverse-continue” command to play back forwards, which will stop at any breakpoint. In this case, after searching for the error message in the LuaJIT source, we set a breakpoint at lj<sub>err</sub><sub>optype</sub> and will give us more information about the error details:
+</p>
+
+<pre class="example">
+(gdb) break lj_err_optype
+Breakpoint 1 at 0xffffbb0b6cf8: file lj_err.c, line 911.
+(gdb) reverse-continue 
+Continuing.
+
+Breakpoint 1, lj_err_optype (L=0x4517e33a1980, o=0x4517e57bcf80, opm=LJ_ERR_OPARITH) at lj_err.c:911
+911	  const char *tname = lj_typename(o);
+(gdb)
+</pre>
+
+<p>
+And at this point, we can get information by printing tname and o and o’s value in this lj<sub>err</sub><sub>optype</sub> function.
+</p>
+
+<div class="org-src-container">
+<pre class="src src-c">void lj_err_optype(lua_State *L, cTValue *o, ErrMsg opm)
+{
+  const char *tname = lj_typename(o);
+  const char *opname = err2msg(opm);
+  if (curr_funcisL(L)) {
+    GCproto *pt = curr_proto(L);
+    const BCIns *pc = cframe_Lpc(L) - 1;
+    const char *oname = NULL;
+    const char *kind = lj_debug_slotname(pt, pc, (BCReg)(o-L-&gt;base), &amp;oname);
+    if (kind)
+      err_msgv(L, LJ_ERR_BADOPRT, opname, kind, oname, tname);
+  }
+  err_msgv(L, LJ_ERR_BADOPRV, opname, tname);
+}
+
+</pre>
+</div>
+
+<p>
+This confirms the value under pointer o is a function value already. It is an error to perform arithmetic operations on a function value in Lua language. 
+</p>
+
+<p>
+The question now became where this value was overridden from a number value to a function value. This question could be answered in various ways. One approach is to set up a watch point in the gdb to the memory address that o is pointing to and do the reverse-continue. 
+</p>
+
+<p>
+In our case, there is a bug in the rr tool itself, the reverse-continue does not work with the watch point. The original rr paper did not support ARM. The porting to ARM64 was only done recently after the ARM64 LSE platform became available on the market, which rr depends on. We were able to use the tool anyway by running the “next” command again and again to check when the value is overridden. We set up several breakpoints to speed up this process: 
+</p>
+
+<ol class="org-ol">
+<li><code>lj_trace_exit</code>, this function does the transformation from JITed code to interpreter in LuaJIT. It is an important point that marks whether the error happens in JITed code or in the interpreter.</li>
+<li><code>TRACE_939</code>, this the JITed code trace that contains the line init.lua:1441 in the error message. We can get this information from the JIT dump log file.</li>
+</ol>
+
+<p>
+After setting up these breakpoints, we can run “continue” or “reverse-continue” in the gdb and examine the memory address that contains the wrong value regularly to search the code that writes the wrong value into that memory address.
+</p>
+
+<p>
+Using this technique we found the location and it is in the following JITed code:
+</p>
+
+<pre class="example">
+---- TRACE 1464 start 957/2 init.lua:1439
+1141  ITERC   62   3   3       (init.lua:1439)
+0000  . FUNCC               ; ipairs_aux
+1142  JITERL  62 939       (init.lua:1439)
+---- TRACE 1464 IR
+0001  fun SLOAD  #61   T
+0002  tab SLOAD  #62   T
+0003  int SLOAD  #63   T
+0004  fun EQ     0001  ipairs_aux
+0005  int ADD    0003  +1  
+0006  int FLOAD  0002  tab.asize
+0007  int ABC    0006  0005
+0008  p64 FLOAD  0002  tab.array
+0009  p64 AREF   0008  0005
+0010  str ALOAD  0009
+---- TRACE 1464 mcode 176
+ffffbb551d9c  mov   x25, #35480
+ffffbb551da0  movk  x25, #58165, lsl #16
+ffffbb551da4  movk  x25, #17687, lsl #32
+...
+ffffbb551e34  add   x30, x1, w28, uxtw
+ffffbb551e38  str   x30, [x19, #496]
+ffffbb551e3c  add   x30, x1, w28, uxtw
+ffffbb551e40  stp   x30, x0, [x19, #488] // wrong value is written here
+ffffbb551e44  add   sp, sp, #64
+ffffbb551e48  b     0xbb5b0520
+---- TRACE 1464 stop -&gt; 939
+</pre>
+
+<p>
+The <code>stp x30, x0, [x19, #488]</code> is the line of ARM64 assembly code that corrupts the memory. To fix this error, we need to deep dive into the LuaJIT JIT compiler and see what happens during the code generation.
+</p>
+</div>
+</div>
+<div id="outline-container-org2dcc948" class="outline-2">
+<h2 id="org2dcc948">Fix the error in the code generation</h2>
+<div class="outline-text-2" id="text-org2dcc948">
+<p>
+After searching the LuaJIT source code, there is only one place that can generate the “stp” instruction, the emit<sub>lso</sub> function.
+</p>
+
+<div class="org-src-container">
+<pre class="src src-c">static void emit_lso(ASMState *as, A64Ins ai, Reg rd, Reg rn, int64_t ofs)
+{
+  int ot = emit_checkofs(ai, ofs), sc = (ai &gt;&gt; 30) &amp; 3;
+  lj_assertA(ot, "load/store offset %d out of range", ofs);
+  /* Combine LDR/STR pairs to LDP/STP. */
+  if ((sc == 2 || sc == 3) &amp;&amp;
+      (!(ai &amp; 0x400000) || rd != rn) &amp;&amp;
+      as-&gt;mcp != as-&gt;mcloop) {
+    uint32_t prev = *as-&gt;mcp &amp; ~A64F_D(31);
+    int ofsm = ofs - (1&lt;&lt;sc), ofsp = ofs + (1&lt;&lt;sc);
+    A64Ins aip;
+    if (prev == (ai | A64F_N(rn) | A64F_U12(ofsm&gt;&gt;sc)) ||
+        prev == ((ai^A64I_LS_U) | A64F_N(rn) | A64F_S9(ofsm&amp;0x1ff))) {
+      aip = (A64F_A(rd) | A64F_D(*as-&gt;mcp &amp; 31));
+    } else if (prev == (ai | A64F_N(rn) | A64F_U12(ofsp&gt;&gt;sc)) ||
+               prev == ((ai^A64I_LS_U) | A64F_N(rn) | A64F_S9(ofsp&amp;0x1ff))) {
+      aip = (A64F_D(rd) | A64F_A(*as-&gt;mcp &amp; 31));
+      ofsm = ofs;
+    } else {
+      goto nopair;
+    }
+    if (ofsm &gt;= (int)((unsigned int)-64&lt;&lt;sc) &amp;&amp; ofsm &lt;= (63&lt;&lt;sc)) {
+      *as-&gt;mcp = aip | A64F_N(rn) | ((ofsm &gt;&gt; sc) &lt;&lt; 15) |
+        (ai ^ ((ai == A64I_LDRx || ai == A64I_STRx) ? 0x50000000 : 0x90000000));
+      return;
+    }
+  }
+nopair:
+  if (ot == 1)
+    *--as-&gt;mcp = ai | A64F_D(rd) | A64F_N(rn) | A64F_U12(ofs &gt;&gt; sc);
+  else
+    *--as-&gt;mcp = (ai^A64I_LS_U) | A64F_D(rd) | A64F_N(rn) | A64F_S9(ofs &amp; 0x1ff);
+}
+
+</pre>
+</div>
+
+<p>
+We can set a breakpoint on this function and check how the “stp” instruction is generated.
+</p>
+
+<p>
+Basically, this function is doing two things:
+</p>
+
+<ol class="org-ol">
+<li>Generate regular load/store instruction for the load/store Intermediate Representation in the LuaJIT compiler.</li>
+<li>Try to merge consecutive load/store instructions when some conditions meet, like if the 2 stores have the same index register and the offset is adjacent, which is also called peephole optimization in compiler optimization.</li>
+</ol>
+
+<p>
+In our failure case, this function has merged the following 2 store instructions:
+</p>
+
+<pre class="example">
+str x30, [x19, #488] // merge into ==&gt; stp x30, x0, [x19, #488]
+stur x0, [x19, #-16] 
+</pre>
+
+<p>
+This is not correct! 
+</p>
+
+<p>
+Because the offset 488 and -16 are not adjacent. The next store position of 488 is:
+</p>
+
+<pre class="example">
+488 + 8 = 496 // 8 for 64 bit data.
+</pre>
+
+
+<p>
+The code treats real offset -16 the same as 496, which is wrong. The following explains why this happens.
+</p>
+
+<p>
+And according to ARM64 instruction definition, the stur instruction is encoded like:
+</p>
+
+<table border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
+
+
+<colgroup>
+<col  class="org-right" />
+
+<col  class="org-right" />
+
+<col  class="org-right" />
+
+<col  class="org-right" />
+
+<col  class="org-right" />
+
+<col  class="org-right" />
+
+<col  class="org-right" />
+
+<col  class="org-right" />
+
+<col  class="org-right" />
+
+<col  class="org-right" />
+
+<col  class="org-right" />
+
+<col  class="org-right" />
+
+<col  class="org-right" />
+
+<col  class="org-right" />
+
+<col  class="org-right" />
+
+<col  class="org-right" />
+
+<col  class="org-right" />
+
+<col  class="org-right" />
+
+<col  class="org-right" />
+
+<col  class="org-right" />
+
+<col  class="org-right" />
+
+<col  class="org-right" />
+
+<col  class="org-right" />
+
+<col  class="org-right" />
+
+<col  class="org-right" />
+
+<col  class="org-right" />
+
+<col  class="org-right" />
+
+<col  class="org-right" />
+
+<col  class="org-right" />
+
+<col  class="org-right" />
+
+<col  class="org-right" />
+
+<col  class="org-right" />
+</colgroup>
+<tbody>
+<tr>
+<td class="org-right">31</td>
+<td class="org-right">30</td>
+<td class="org-right">29</td>
+<td class="org-right">28</td>
+<td class="org-right">27</td>
+<td class="org-right">26</td>
+<td class="org-right">25</td>
+<td class="org-right">24</td>
+<td class="org-right">23</td>
+<td class="org-right">22</td>
+<td class="org-right">21</td>
+<td class="org-right">20</td>
+<td class="org-right">19</td>
+<td class="org-right">18</td>
+<td class="org-right">17</td>
+<td class="org-right">16</td>
+<td class="org-right">15</td>
+<td class="org-right">14</td>
+<td class="org-right">13</td>
+<td class="org-right">12</td>
+<td class="org-right">11</td>
+<td class="org-right">10</td>
+<td class="org-right">9</td>
+<td class="org-right">8</td>
+<td class="org-right">7</td>
+<td class="org-right">6</td>
+<td class="org-right">5</td>
+<td class="org-right">4</td>
+<td class="org-right">3</td>
+<td class="org-right">2</td>
+<td class="org-right">1</td>
+<td class="org-right">0</td>
+</tr>
+
+<tr>
+<td class="org-right">1</td>
+<td class="org-right">x</td>
+<td class="org-right">1</td>
+<td class="org-right">1</td>
+<td class="org-right">1</td>
+<td class="org-right">0</td>
+<td class="org-right">0</td>
+<td class="org-right">0</td>
+<td class="org-right">0</td>
+<td class="org-right">0</td>
+<td class="org-right">0</td>
+<td class="org-right">imm9</td>
+<td class="org-right">&#xa0;</td>
+<td class="org-right">&#xa0;</td>
+<td class="org-right">&#xa0;</td>
+<td class="org-right">&#xa0;</td>
+<td class="org-right">&#xa0;</td>
+<td class="org-right">&#xa0;</td>
+<td class="org-right">&#xa0;</td>
+<td class="org-right">&#xa0;</td>
+<td class="org-right">0</td>
+<td class="org-right">0</td>
+<td class="org-right">Rn</td>
+<td class="org-right">&#xa0;</td>
+<td class="org-right">&#xa0;</td>
+<td class="org-right">&#xa0;</td>
+<td class="org-right">&#xa0;</td>
+<td class="org-right">Rt</td>
+<td class="org-right">&#xa0;</td>
+<td class="org-right">&#xa0;</td>
+<td class="org-right">&#xa0;</td>
+<td class="org-right">&#xa0;</td>
+</tr>
+</tbody>
+</table>
+
+<p>
+The offset (like -16) is stored in field imm9, which is short for immediate integer with 9 bits long. Imm9 can be either signed or unsigned depending how you interpret it. And 496 in the imm9 unsigned integer format is 1 1111 000. -16 in the imm9 signed integer format is also 1 1111 000. They are the same! This leads to passing the check at this line in above emit<sub>lso</sub> function:
+</p>
+
+<pre class="example">
+prev == ((ai^A64I_LS_U) | A64F_N(rn) | A64F_S9(ofsp &amp; 0x1ff))
+</pre>
+
+<p>
+This causes the generation of the wrong instruction: <code>stp x30, x0, [x19, #488]</code>. To fix this error, we can add additional checks for the offset range before merging as we did in the submitted PR to LuaJIT upstream.
+</p>
+
+<p>
+In retrospect, peephole optimization errors should always be triggered if there are such pairs of instructions. So why does it happen intermittently in our CI, which always has the same input in every run? 
+</p>
+
+<p>
+The reason is Lua language itself has non-deterministic behaviors like the order of table iteration is undefined. And LuaJIT itself also has non-deterministic behaviors in the implementation, like the hot <a href="https://github.com/lua-users-foundation/LuaJIT/pull/6">loop count</a>, side trace penalty counter, etc. All of them will cause different JIT compilation behaviors even with the same input, especially if the test is large with thousands of JIT traces (in the above case, there are about 1500 JIT traces). These non-deterministic behaviors lead to intermittent failure.
+</p>
+
+<p>
+<a href="https://news.ycombinator.com/item?id=38653017">hacker news link.</a>
+</p>
+</div>
+</div>
+</div>
+<div id="postamble" class="status">
+<p class="date">Date: 2023-10-04 Wed 00:00</p>
+</div>
+</body>
+</html>

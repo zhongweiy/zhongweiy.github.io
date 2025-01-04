@@ -212,18 +212,18 @@ an FFI call into a C function get JIT-compiled, which in turn calls a callback, 
 When it happends, user will have a "bad callback" error.
 </p>
 
-<div id="outline-container-org1b9d2d0" class="outline-2">
-<h2 id="org1b9d2d0">What is a LuaJIT FFI callback?</h2>
-<div class="outline-text-2" id="text-org1b9d2d0">
+<div id="outline-container-org6f6e91d" class="outline-2">
+<h2 id="org6f6e91d">What is a LuaJIT FFI callback?</h2>
+<div class="outline-text-2" id="text-org6f6e91d">
 <p>
 LuaJIT FFI callback is a lua function, which is called by FFI C code.
 </p>
 </div>
 </div>
 
-<div id="outline-container-org26c4132" class="outline-2">
-<h2 id="org26c4132">An example to trigger the bad callback issue.</h2>
-<div class="outline-text-2" id="text-org26c4132">
+<div id="outline-container-org7cfb38c" class="outline-2">
+<h2 id="org7cfb38c">An example to trigger the bad callback issue.</h2>
+<div class="outline-text-2" id="text-org7cfb38c">
 <div class="org-src-container">
 <pre class="src src-lua">-- save to file test.lua
 local ffi = require("ffi")
@@ -320,9 +320,9 @@ The call chain is like: Trace 1 -&gt; lib.f2() -&gt; lua callback function.
 </div>
 </div>
 
-<div id="outline-container-orga0d7101" class="outline-2">
-<h2 id="orga0d7101">LuaJIT's bad callback auto detection feature</h2>
-<div class="outline-text-2" id="text-orga0d7101">
+<div id="outline-container-org3d3f926" class="outline-2">
+<h2 id="org3d3f926">LuaJIT's bad callback auto detection feature</h2>
+<div class="outline-text-2" id="text-org3d3f926">
 <p>
 In some case, LuaJIT can automatically detect bad callback and disable the JIT compilation for the related FFI call. Here is a slightly modified example from previous example.
 </p>
@@ -429,18 +429,18 @@ end
 </div>
 </div>
 
-<div id="outline-container-org9f37083" class="outline-2">
-<h2 id="org9f37083">Why the auto detection can not always catches the LuaJIT FFI callback case?</h2>
-<div class="outline-text-2" id="text-org9f37083">
+<div id="outline-container-orgbd8b8f2" class="outline-2">
+<h2 id="orgbd8b8f2">Why the auto detection can not always catches the LuaJIT FFI callback case?</h2>
+<div class="outline-text-2" id="text-orgbd8b8f2">
 <p>
 Because the auto detection takes effect only during LuaJIT trace compilation and in the first case, when the trace is compiled, there is no FFI callback. Since we deliberately only set the callback in the lua loop code when i == 80. So in the later iteration of the looping (i &gt; 80), there is FFI callback, which is not expected in the compiled trace. And we can not change the compiled code at this time. The assumption “not allow an FFI call into a C function get JIT-compiled” is broken. It then runs into error “bad callback”.
 </p>
 </div>
 </div>
 
-<div id="outline-container-org464db57" class="outline-2">
-<h2 id="org464db57">How other VMs solve this issue?</h2>
-<div class="outline-text-2" id="text-org464db57">
+<div id="outline-container-orgec050bd" class="outline-2">
+<h2 id="orgec050bd">How other VMs solve this issue?</h2>
+<div class="outline-text-2" id="text-orgec050bd">
 <p>
 In the "Trace-based Just-in-Time Type Specialization for Dynamic Languages by Andreas Gal etc." paper section 6.5, there is a description for the similar situation:
 </p>
