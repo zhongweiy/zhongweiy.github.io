@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>LuaJIT bad FFI callback issue</title>
 <meta name="generator" content="Org Mode" />
-<style>
+<style type="text/css">
   #content { max-width: 60em; margin: auto; }
   .title  { text-align: center;
              margin-bottom: .2em; }
@@ -192,12 +192,13 @@
   .org-svg { }
 </style>
 <link rel="stylesheet" href="./worg.css" type="text/css"/>
+<link rel="stylesheet" href="./htmlize.css" type="text/css"/><link rel="alternate" type="application/rss+xml" title="Zhongwei Yao — Compilers, VMs & Systems Programming" href="https://zhongweiy.github.io/rss.xml"/>
 </head>
 <body>
 <div id="org-div-home-and-up">
-<!-- <a accesskey="H" href=""> UP </a> -->
  <a accesskey="H" href="index.html"> HOME </a>
  <a accesskey="A" href="about.html"> about </a>
+ <a href="rss.xml"> rss </a>
 </div><div id="content" class="content">
 <h1 class="title">LuaJIT bad FFI callback issue</h1>
 <p>
@@ -211,75 +212,73 @@ an FFI call into a C function get JIT-compiled, which in turn calls a callback, 
 <p>
 When it happends, user will have a "bad callback" error.
 </p>
-
-<div id="outline-container-org6f6e91d" class="outline-2">
-<h2 id="org6f6e91d">What is a LuaJIT FFI callback?</h2>
-<div class="outline-text-2" id="text-org6f6e91d">
+<div id="outline-container-orgbeeffa6" class="outline-2">
+<h2 id="orgbeeffa6">What is a LuaJIT FFI callback?</h2>
+<div class="outline-text-2" id="text-orgbeeffa6">
 <p>
 LuaJIT FFI callback is a lua function, which is called by FFI C code.
 </p>
 </div>
 </div>
-
-<div id="outline-container-org7cfb38c" class="outline-2">
-<h2 id="org7cfb38c">An example to trigger the bad callback issue.</h2>
-<div class="outline-text-2" id="text-org7cfb38c">
+<div id="outline-container-org6cb655d" class="outline-2">
+<h2 id="org6cb655d">An example to trigger the bad callback issue.</h2>
+<div class="outline-text-2" id="text-org6cb655d">
 <div class="org-src-container">
-<pre class="src src-lua">-- save to file test.lua
-local ffi = require("ffi")
+<pre class="src src-lua"><span class="org-comment-delimiter">-- </span><span class="org-comment">save to file test.lua
+</span><span class="org-keyword">local</span> <span class="org-variable-name">ffi</span> = <span class="org-builtin">require</span>(<span class="org-string">"ffi"</span>)
 
-ffi.cdef [[
+ffi.cdef <span class="org-string">[[
     typedef int (*my_fn_t)(int);
     int f2();
     void setup(my_fn_t f, int);
-]]
+]]</span>
 
-local lib = ffi.load("test")
+<span class="org-keyword">local</span> <span class="org-variable-name">lib</span> = ffi.load(<span class="org-string">"test"</span>)
 
-function setup(cb, a)
+<span class="org-keyword">function</span> <span class="org-function-name">setup</span>(<span class="org-variable-name">cb</span>, <span class="org-variable-name">a</span>)
   lib.setup(cb, a)
-end
+<span class="org-keyword">end</span>
 
-function f0()
-  -- The FFI call to f2(), which is defined in C library test.so. 
-  return lib.f2() + 1
-end
+<span class="org-keyword">function</span> <span class="org-function-name">f0</span>()
+  <span class="org-comment-delimiter">-- </span><span class="org-comment">The FFI call to f2(), which is defined in C library test.so. 
+</span>  <span class="org-keyword">return</span> lib.f2() + 1
+<span class="org-keyword">end</span>
 
-do
-  local cb = ffi.cast("my_fn_t",
-                      -- This is the FFI callback function.
-                      function(a)
-                        return a
-  end)
+<span class="org-keyword">do</span>
+  <span class="org-keyword">local</span> <span class="org-variable-name">cb</span> = ffi.cast(<span class="org-string">"my_fn_t"</span>,
+                      <span class="org-comment-delimiter">-- </span><span class="org-comment">This is the FFI callback function.
+</span>                      <span class="org-keyword">function</span>(<span class="org-variable-name">a</span>)
+                        <span class="org-keyword">return</span> a
+  <span class="org-keyword">end</span>)
 
-  for i=1,100 do
-    if i == 80 then setup(cb, 10) end
+  <span class="org-keyword">for</span> <span class="org-variable-name">i</span>=1,100 <span class="org-keyword">do</span>
+    <span class="org-keyword">if</span> i == 80 <span class="org-keyword">then</span> setup(cb, 10) <span class="org-keyword">end</span>
     f0()
-  end
-end      
+  <span class="org-keyword">end</span>
+<span class="org-keyword">end</span>      
 </pre>
 </div>
 
 <div class="org-src-container">
-<pre class="src src-c">// save to file lib.c
-// and compile it to a shared libary:
-//   gcc -Wall -O -g -o libtest.so -fpic -shared lib.c
-// put libtest.so under the same path of test.lua
-typedef int (*my_fn_t)(int);
+<pre class="src src-c"><span class="org-comment-delimiter">// </span><span class="org-comment">save to file lib.c
+</span><span class="org-comment-delimiter">// </span><span class="org-comment">and compile it to a shared libary:
+</span><span class="org-comment-delimiter">//   </span><span class="org-comment">gcc -Wall -O -g -o libtest.so -fpic -shared lib.c
+</span><span class="org-comment-delimiter">// </span><span class="org-comment">put libtest.so under the same path of test.lua
+</span><span class="org-keyword">typedef</span> <span class="org-type">int</span> (*<span class="org-type">my_fn_t</span>)(<span class="org-type">int</span>);
 
-my_fn_t gf = 0;
-int ga;
+<span class="org-type">my_fn_t</span> <span class="org-variable-name">gf</span> = 0;
+<span class="org-type">int</span> <span class="org-variable-name">ga</span>;
 
-void setup(my_fn_t f, int a) {
+<span class="org-type">void</span> <span class="org-function-name">setup</span>(<span class="org-type">my_fn_t</span> <span class="org-variable-name">f</span>, <span class="org-type">int</span> <span class="org-variable-name">a</span>) {
   gf = f;
   ga = a;
 }
 
-int f2() {
-  if (gf == 0) { // this is necessary to escape the auto-detection.
-    return 3;
-  } else {
-    return gf(ga) + 1;
+<span class="org-type">int</span> <span class="org-function-name">f2</span>() {
+  <span class="org-keyword">if</span> (gf == 0) { <span class="org-comment-delimiter">// </span><span class="org-comment">this is necessary to escape the auto-detection.
+</span>    <span class="org-keyword">return</span> 3;
+  } <span class="org-keyword">else</span> {
+    <span class="org-keyword">return</span> gf(ga) + 1;
   }
 }  
 </pre>
@@ -289,16 +288,16 @@ int f2() {
 And then, run it will give us the "bad callback" error:
 </p>
 <div class="org-src-container">
-<pre class="src src-shell">$luajit test.lua
-PANIC: unprotected error in call to Lua API (bad callback)
+<pre class="src src-shell">$<span class="org-variable-name">luajit</span> test.lua
+PANIC: unprotected error<span class="org-keyword"> in</span> call to Lua API (bad callback)
 </pre>
 </div>
 
 <p>
 Run it with trace dump will show that the f0() call is compiled by the JIT compiler:
 </p>
-<pre class="example">
----- TRACE 1 start test.lua:27
+<div class="org-src-container">
+<pre class="src src-nil">---- TRACE 1 start test.lua:27
 0022  ISNEN    6   0      ; 80
 0023  JMP      7 =&gt; 0028
 0028  GGET     7   9      ; "f0"
@@ -313,77 +312,77 @@ Run it with trace dump will show that the f0() call is compiled by the JIT compi
 0005  . RET1     0   2
 0030  FORL     3 =&gt; 0022  
 </pre>
+</div>
 
 <p>
 The call chain is like: Trace 1 -&gt; lib.f2() -&gt; lua callback function.
 </p>
 </div>
 </div>
-
-<div id="outline-container-org3d3f926" class="outline-2">
-<h2 id="org3d3f926">LuaJIT's bad callback auto detection feature</h2>
-<div class="outline-text-2" id="text-org3d3f926">
+<div id="outline-container-org1c5e49b" class="outline-2">
+<h2 id="org1c5e49b">LuaJIT's bad callback auto detection feature</h2>
+<div class="outline-text-2" id="text-org1c5e49b">
 <p>
 In some case, LuaJIT can automatically detect bad callback and disable the JIT compilation for the related FFI call. Here is a slightly modified example from previous example.
 </p>
 
 <div class="org-src-container">
-<pre class="src src-lua">local ffi = require("ffi")
+<pre class="src src-lua"><span class="org-keyword">local</span> <span class="org-variable-name">ffi</span> = <span class="org-builtin">require</span>(<span class="org-string">"ffi"</span>)
 
-ffi.cdef [[
+ffi.cdef <span class="org-string">[[
     typedef int (*my_fn_t)(int);
     int f2();
     void setup(my_fn_t f, int);
-]]
+]]</span>
 
-local lib = ffi.load("test")
+<span class="org-keyword">local</span> <span class="org-variable-name">lib</span> = ffi.load(<span class="org-string">"test"</span>)
 
-function setup(cb, a)
+<span class="org-keyword">function</span> <span class="org-function-name">setup</span>(<span class="org-variable-name">cb</span>, <span class="org-variable-name">a</span>)
   lib.setup(cb, a)
-end
+<span class="org-keyword">end</span>
 
-function f0()
-  -- The FFI call to f2(), which is defined in C library test.so. 
-  return lib.f2() + 1
-end
+<span class="org-keyword">function</span> <span class="org-function-name">f0</span>()
+  <span class="org-comment-delimiter">-- </span><span class="org-comment">The FFI call to f2(), which is defined in C library test.so. 
+</span>  <span class="org-keyword">return</span> lib.f2() + 1
+<span class="org-keyword">end</span>
 
-do
-  local cb = ffi.cast("my_fn_t",
-                      -- This is the FFI callback function.
-                      function(a)
-                        return a
-  end)
+<span class="org-keyword">do</span>
+  <span class="org-keyword">local</span> <span class="org-variable-name">cb</span> = ffi.cast(<span class="org-string">"my_fn_t"</span>,
+                      <span class="org-comment-delimiter">-- </span><span class="org-comment">This is the FFI callback function.
+</span>                      <span class="org-keyword">function</span>(<span class="org-variable-name">a</span>)
+                        <span class="org-keyword">return</span> a
+  <span class="org-keyword">end</span>)
 
-  local cb2 = ffi.cast("my_fn_t",
-                      -- This is the FFI callback function.
-                      function(a)
-                        return a+1
-  end)
+  <span class="org-keyword">local</span> <span class="org-variable-name">cb2</span> = ffi.cast(<span class="org-string">"my_fn_t"</span>,
+                      <span class="org-comment-delimiter">-- </span><span class="org-comment">This is the FFI callback function.
+</span>                      <span class="org-keyword">function</span>(<span class="org-variable-name">a</span>)
+                        <span class="org-keyword">return</span> a+1
+  <span class="org-keyword">end</span>)
 
   setup(cb, 10)
 
-  for i=1,100 do
-    if i == 80 then setup(cb2, 10) end
+  <span class="org-keyword">for</span> <span class="org-variable-name">i</span>=1,100 <span class="org-keyword">do</span>
+    <span class="org-keyword">if</span> i == 80 <span class="org-keyword">then</span> setup(cb2, 10) <span class="org-keyword">end</span>
     f0()
-  end
-end      
+  <span class="org-keyword">end</span>
+<span class="org-keyword">end</span>      
 </pre>
 </div>
 
 <div class="org-src-container">
-<pre class="src src-c">typedef int (*my_fn_t)(int);
+<pre class="src src-c"><span class="org-keyword">typedef</span> <span class="org-type">int</span> (*<span class="org-type">my_fn_t</span>)(<span class="org-type">int</span>);
 
-my_fn_t gf = 0;
-int ga;
+<span class="org-type">my_fn_t</span> <span class="org-variable-name">gf</span> = 0;
+<span class="org-type">int</span> <span class="org-variable-name">ga</span>;
 
-void setup(my_fn_t f, int a) {
+<span class="org-type">void</span> <span class="org-function-name">setup</span>(<span class="org-type">my_fn_t</span> <span class="org-variable-name">f</span>, <span class="org-type">int</span> <span class="org-variable-name">a</span>) {
   gf = f;
   ga = a;
 }
 
-int f2() {
-  // f2 will always call a Lua callback.
-  return gf(ga) + 1;
+<span class="org-type">int</span> <span class="org-function-name">f2</span>() {
+  <span class="org-comment-delimiter">// </span><span class="org-comment">f2 will always call a Lua callback.
+</span>  <span class="org-keyword">return</span> gf(ga) + 1;
 }
 </pre>
 </div>
@@ -391,8 +390,8 @@ int f2() {
 <p>
 This example can run without bad callback error. And from the dumped trace, we can see the JIT compilation for the FFI call in f0() is aborted and it is added to backlist. So there is no JIT compiled FFI call, it is safe to do lua callback in the C code now.
 </p>
-<pre class="example">
----- TRACE 1 start test1.lua:35
+<div class="org-src-container">
+<pre class="src src-nil">---- TRACE 1 start test1.lua:35
 0030  ISNEN    7   0      ; 80
 0031  JMP      8 =&gt; 0036
 0036  GGET     8   9      ; "f0"
@@ -405,42 +404,41 @@ This example can run without bad callback error. And from the dumped trace, we c
 0000  . . FUNCC               ; ffi.meta.__call
 ---- TRACE 1 abort test1.lua:17 -- blacklisted
 </pre>
+</div>
 
 <p>
 The same effect can be achieved by manually turning off JIT compilation in the first test case:
 </p>
 <div class="org-src-container">
-<pre class="src src-lua">do
-  local cb = ffi.cast("my_fn_t",
-                      -- This is the FFI callback function.
-                      function(a)
-                        return a
-  end)
+<pre class="src src-lua"><span class="org-keyword">do</span>
+  <span class="org-keyword">local</span> <span class="org-variable-name">cb</span> = ffi.cast(<span class="org-string">"my_fn_t"</span>,
+                      <span class="org-comment-delimiter">-- </span><span class="org-comment">This is the FFI callback function.
+</span>                      <span class="org-keyword">function</span>(<span class="org-variable-name">a</span>)
+                        <span class="org-keyword">return</span> a
+  <span class="org-keyword">end</span>)
 
   jit.off(f0)
 
-  for i=1,100 do
-    if i == 80 then setup(cb, 10) end
+  <span class="org-keyword">for</span> <span class="org-variable-name">i</span>=1,100 <span class="org-keyword">do</span>
+    <span class="org-keyword">if</span> i == 80 <span class="org-keyword">then</span> setup(cb, 10) <span class="org-keyword">end</span>
     f0()
-  end
-end   
+  <span class="org-keyword">end</span>
+<span class="org-keyword">end</span>   
 </pre>
 </div>
 </div>
 </div>
-
-<div id="outline-container-orgbd8b8f2" class="outline-2">
-<h2 id="orgbd8b8f2">Why the auto detection can not always catches the LuaJIT FFI callback case?</h2>
-<div class="outline-text-2" id="text-orgbd8b8f2">
+<div id="outline-container-orgc813f0b" class="outline-2">
+<h2 id="orgc813f0b">Why the auto detection can not always catches the LuaJIT FFI callback case?</h2>
+<div class="outline-text-2" id="text-orgc813f0b">
 <p>
 Because the auto detection takes effect only during LuaJIT trace compilation and in the first case, when the trace is compiled, there is no FFI callback. Since we deliberately only set the callback in the lua loop code when i == 80. So in the later iteration of the looping (i &gt; 80), there is FFI callback, which is not expected in the compiled trace. And we can not change the compiled code at this time. The assumption “not allow an FFI call into a C function get JIT-compiled” is broken. It then runs into error “bad callback”.
 </p>
 </div>
 </div>
-
-<div id="outline-container-orgec050bd" class="outline-2">
-<h2 id="orgec050bd">How other VMs solve this issue?</h2>
-<div class="outline-text-2" id="text-orgec050bd">
+<div id="outline-container-org78c7f89" class="outline-2">
+<h2 id="org78c7f89">How other VMs solve this issue?</h2>
+<div class="outline-text-2" id="text-org78c7f89">
 <p>
 In the "Trace-based Just-in-Time Type Specialization for Dynamic Languages by Andreas Gal etc." paper section 6.5, there is a description for the similar situation:
 </p>

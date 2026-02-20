@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>Reification call stack by coroutine</title>
 <meta name="generator" content="Org Mode" />
-<style>
+<style type="text/css">
   #content { max-width: 60em; margin: auto; }
   .title  { text-align: center;
              margin-bottom: .2em; }
@@ -192,12 +192,13 @@
   .org-svg { }
 </style>
 <link rel="stylesheet" href="./worg.css" type="text/css"/>
+<link rel="stylesheet" href="./htmlize.css" type="text/css"/><link rel="alternate" type="application/rss+xml" title="Zhongwei Yao — Compilers, VMs & Systems Programming" href="https://zhongweiy.github.io/rss.xml"/>
 </head>
 <body>
 <div id="org-div-home-and-up">
-<!-- <a accesskey="H" href=""> UP </a> -->
  <a accesskey="H" href="index.html"> HOME </a>
  <a accesskey="A" href="about.html"> about </a>
+ <a href="rss.xml"> rss </a>
 </div><div id="content" class="content">
 <h1 class="title">Reification call stack by coroutine</h1>
 <p>
@@ -221,13 +222,13 @@ Here is my try in Lua, in which coroutine is first-class value.
 We want to transfer some recursive function to the form with explicit call stack structure. Here is an example of counting element of array in recursive style:
 </p>
 <div class="org-src-container">
-<pre class="src src-lua">local function length_rec(t)
-  if t == nil or #t == 0 then
-    return 0
-  end
+<pre class="src src-lua"><span class="org-keyword">local</span> <span class="org-keyword">function</span> <span class="org-function-name">length_rec</span>(<span class="org-variable-name">t</span>)
+  <span class="org-keyword">if</span> t == <span class="org-constant">nil</span> <span class="org-keyword">or</span> #t == 0 <span class="org-keyword">then</span>
+    <span class="org-keyword">return</span> 0
+  <span class="org-keyword">end</span>
 
-  return 1 + length_rec({table.unpack(t, 2)})
-end
+  <span class="org-keyword">return</span> 1 + length_rec({<span class="org-builtin">table</span>.<span class="org-builtin">unpack</span>(t, 2)})
+<span class="org-keyword">end</span>
 </pre>
 </div>
 
@@ -235,14 +236,14 @@ end
 And re-write it with coroutine will be:
 </p>
 <div class="org-src-container">
-<pre class="src src-lua">local function length(t)
-  if t == nil or #t == 0 then
-    coroutine.yield("ret", 0)
-  else
-    local l = coroutine.yield("call", {table.unpack(t, 2)})
-    coroutine.yield("ret", l + 1)
-  end
-end
+<pre class="src src-lua"><span class="org-keyword">local</span> <span class="org-keyword">function</span> <span class="org-function-name">length</span>(<span class="org-variable-name">t</span>)
+  <span class="org-keyword">if</span> t == <span class="org-constant">nil</span> <span class="org-keyword">or</span> #t == 0 <span class="org-keyword">then</span>
+    <span class="org-builtin">coroutine</span>.<span class="org-builtin">yield</span>(<span class="org-string">"ret"</span>, 0)
+  <span class="org-keyword">else</span>
+    <span class="org-keyword">local</span> <span class="org-variable-name">l</span> = <span class="org-builtin">coroutine</span>.<span class="org-builtin">yield</span>(<span class="org-string">"call"</span>, {<span class="org-builtin">table</span>.<span class="org-builtin">unpack</span>(t, 2)})
+    <span class="org-builtin">coroutine</span>.<span class="org-builtin">yield</span>(<span class="org-string">"ret"</span>, l + 1)
+  <span class="org-keyword">end</span>
+<span class="org-keyword">end</span>
 </pre>
 </div>
 
@@ -250,38 +251,38 @@ end
 And we need to create infrastructure to run this coroutine style function. Here is one possible implementation:
 </p>
 <div class="org-src-container">
-<pre class="src src-lua">local function run(f, arg)
-  local init_co = coroutine.create(f)
-  local stacks = {{init_co, "init", arg}}
+<pre class="src src-lua"><span class="org-keyword">local</span> <span class="org-keyword">function</span> <span class="org-function-name">run</span>(<span class="org-variable-name">f</span>, <span class="org-variable-name">arg</span>)
+  <span class="org-keyword">local</span> <span class="org-variable-name">init_co</span> = <span class="org-builtin">coroutine</span>.<span class="org-builtin">create</span>(f)
+  <span class="org-keyword">local</span> <span class="org-variable-name">stacks</span> = {{init_co, <span class="org-string">"init"</span>, arg}}
 
-  while #stacks ~= 0 do
-    local frame = stacks[#stacks]
-    local co  = frame[1]
-    local frame_type = frame[2]
-    local frame_val = frame[3]
+  <span class="org-keyword">while</span> #stacks ~= 0 <span class="org-keyword">do</span>
+    <span class="org-keyword">local</span> <span class="org-variable-name">frame</span> = stacks[#stacks]
+    <span class="org-keyword">local</span> <span class="org-variable-name">co</span>  = frame[1]
+    <span class="org-keyword">local</span> <span class="org-variable-name">frame_type</span> = frame[2]
+    <span class="org-keyword">local</span> <span class="org-variable-name">frame_val</span> = frame[3]
 
-    if frame_type == "ret" then
-      table.remove(stacks)
+    <span class="org-keyword">if</span> frame_type == <span class="org-string">"ret"</span> <span class="org-keyword">then</span>
+      <span class="org-builtin">table</span>.<span class="org-builtin">remove</span>(stacks)
 
-      if #stacks == 0 then
-        return frame_val
-      else
+      <span class="org-keyword">if</span> #stacks == 0 <span class="org-keyword">then</span>
+        <span class="org-keyword">return</span> frame_val
+      <span class="org-keyword">else</span>
         co = stacks[#stacks][1]
-      end
-    elseif frame_type == "call" then
-      co = coroutine.create(f)
-      -- else frame_type == "init" then
-      --  just use the current frame.
-    end
-    local _, new_frame_type, new_frame_val = coroutine.resume(co, frame_val)
-    if frame_type == "ret" or frame_type == "init" then
+      <span class="org-keyword">end</span>
+    <span class="org-keyword">elseif</span> frame_type == <span class="org-string">"call"</span> <span class="org-keyword">then</span>
+      co = <span class="org-builtin">coroutine</span>.<span class="org-builtin">create</span>(f)
+      <span class="org-comment-delimiter">-- </span><span class="org-comment">else frame_type == "init" then
+</span>      <span class="org-comment-delimiter">--  </span><span class="org-comment">just use the current frame.
+</span>    <span class="org-keyword">end</span>
+    <span class="org-keyword">local</span> <span class="org-variable-name">_</span>, <span class="org-variable-name">new_frame_type</span>, <span class="org-variable-name">new_frame_val</span> = <span class="org-builtin">coroutine</span>.<span class="org-builtin">resume</span>(co, frame_val)
+    <span class="org-keyword">if</span> frame_type == <span class="org-string">"ret"</span> <span class="org-keyword">or</span> frame_type == <span class="org-string">"init"</span> <span class="org-keyword">then</span>
       stacks[#stacks][2] = new_frame_type
       stacks[#stacks][3] = new_frame_val
-    else
-      table.insert(stacks, {co, new_frame_type, new_frame_val})
-    end
-  end
-end
+    <span class="org-keyword">else</span>
+      <span class="org-builtin">table</span>.<span class="org-builtin">insert</span>(stacks, {co, new_frame_type, new_frame_val})
+    <span class="org-keyword">end</span>
+  <span class="org-keyword">end</span>
+<span class="org-keyword">end</span>
 </pre>
 </div>
 
@@ -289,8 +290,8 @@ end
 And run it:
 </p>
 <div class="org-src-container">
-<pre class="src src-lua">print(run(length, {1, 2, 3, 4}))
--- print 4
+<pre class="src src-lua"><span class="org-builtin">print</span>(run(length, {1, 2, 3, 4}))
+<span class="org-comment-delimiter">-- </span><span class="org-comment">print 4</span>
 </pre>
 </div>
 
@@ -298,15 +299,15 @@ And run it:
 Then here is another a little bit more complex example:
 </p>
 <div class="org-src-container">
-<pre class="src src-lua">  local function tree_sum(t)
-  if t == nil then
-    coroutine.yield("ret", 0)
-  else
-    local l = coroutine.yield("call", t['left'])
-    local r = coroutine.yield("call", t['right'])
-    coroutine.yield("ret", l + r + t['v'])
-  end
-end
+<pre class="src src-lua">  <span class="org-keyword">local</span> <span class="org-keyword">function</span> <span class="org-function-name">tree_sum</span>(<span class="org-variable-name">t</span>)
+  <span class="org-keyword">if</span> t == <span class="org-constant">nil</span> <span class="org-keyword">then</span>
+    <span class="org-builtin">coroutine</span>.<span class="org-builtin">yield</span>(<span class="org-string">"ret"</span>, 0)
+  <span class="org-keyword">else</span>
+    <span class="org-keyword">local</span> <span class="org-variable-name">l</span> = <span class="org-builtin">coroutine</span>.<span class="org-builtin">yield</span>(<span class="org-string">"call"</span>, t[<span class="org-string">'left'</span>])
+    <span class="org-keyword">local</span> <span class="org-variable-name">r</span> = <span class="org-builtin">coroutine</span>.<span class="org-builtin">yield</span>(<span class="org-string">"call"</span>, t[<span class="org-string">'right'</span>])
+    <span class="org-builtin">coroutine</span>.<span class="org-builtin">yield</span>(<span class="org-string">"ret"</span>, l + r + t[<span class="org-string">'v'</span>])
+  <span class="org-keyword">end</span>
+<span class="org-keyword">end</span>
 </pre>
 </div>
 
@@ -314,28 +315,27 @@ end
 Run it:
 </p>
 <div class="org-src-container">
-<pre class="src src-lua">print(executor(tree_sum, {v=1, left={v=2, left={v=4}}, right={v=3, right={v=5}}}))
--- print 15
+<pre class="src src-lua"><span class="org-builtin">print</span>(executor(tree_sum, {v=1, left={v=2, left={v=4}}, right={v=3, right={v=5}}}))
+<span class="org-comment-delimiter">-- </span><span class="org-comment">print 15</span>
 </pre>
 </div>
-
-<div id="outline-container-org88bd680" class="outline-2">
-<h2 id="org88bd680">Application of the tranformation</h2>
-<div class="outline-text-2" id="text-org88bd680">
+<div id="outline-container-org564c904" class="outline-2">
+<h2 id="org564c904">Application of the tranformation</h2>
+<div class="outline-text-2" id="text-org564c904">
 <p>
 The following case will run into "stack overflow" error.
 </p>
 <div class="org-src-container">
-<pre class="src src-lua">local function sum_rec(n)
-  if n == 0 then
-    return 0
-  else
-    local s = sum_rec(n - 1)
-    return s + n
-  end
-end
+<pre class="src src-lua"><span class="org-keyword">local</span> <span class="org-keyword">function</span> <span class="org-function-name">sum_rec</span>(<span class="org-variable-name">n</span>)
+  <span class="org-keyword">if</span> n == 0 <span class="org-keyword">then</span>
+    <span class="org-keyword">return</span> 0
+  <span class="org-keyword">else</span>
+    <span class="org-keyword">local</span> <span class="org-variable-name">s</span> = sum_rec(n - 1)
+    <span class="org-keyword">return</span> s + n
+  <span class="org-keyword">end</span>
+<span class="org-keyword">end</span>
 
-print(sum_rec(1000000))
+<span class="org-builtin">print</span>(sum_rec(1000000))
 </pre>
 </div>
 
@@ -343,17 +343,17 @@ print(sum_rec(1000000))
 But with this transformation and re-written, it can produce result correctly:
 </p>
 <div class="org-src-container">
-<pre class="src src-lua">local function sum(n)
-  if n == 0 then
-    coroutine.yield("ret", 0)
-  else
-    local s = coroutine.yield("call", n - 1)
-    coroutine.yield("ret", s + n)
-  end
-end
+<pre class="src src-lua"><span class="org-keyword">local</span> <span class="org-keyword">function</span> <span class="org-function-name">sum</span>(<span class="org-variable-name">n</span>)
+  <span class="org-keyword">if</span> n == 0 <span class="org-keyword">then</span>
+    <span class="org-builtin">coroutine</span>.<span class="org-builtin">yield</span>(<span class="org-string">"ret"</span>, 0)
+  <span class="org-keyword">else</span>
+    <span class="org-keyword">local</span> <span class="org-variable-name">s</span> = <span class="org-builtin">coroutine</span>.<span class="org-builtin">yield</span>(<span class="org-string">"call"</span>, n - 1)
+    <span class="org-builtin">coroutine</span>.<span class="org-builtin">yield</span>(<span class="org-string">"ret"</span>, s + n)
+  <span class="org-keyword">end</span>
+<span class="org-keyword">end</span>
 
-print(executor(sum, 1000000))
--- print 500000500000
+<span class="org-builtin">print</span>(executor(sum, 1000000))
+<span class="org-comment-delimiter">-- </span><span class="org-comment">print 500000500000</span>
 </pre>
 </div>
 </div>
