@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>理解 Y Combinator</title>
 <meta name="generator" content="Org Mode" />
-<style>
+<style type="text/css">
   #content { max-width: 60em; margin: auto; }
   .title  { text-align: center;
              margin-bottom: .2em; }
@@ -192,12 +192,13 @@
   .org-svg { }
 </style>
 <link rel="stylesheet" href="./worg.css" type="text/css"/>
+<link rel="stylesheet" href="./htmlize.css" type="text/css"/><link rel="alternate" type="application/rss+xml" title="Zhongwei Yao — Compilers, VMs & Systems Programming" href="https://zhongweiy.github.io/rss.xml"/>
 </head>
 <body>
 <div id="org-div-home-and-up">
-<!-- <a accesskey="H" href=""> UP </a> -->
  <a accesskey="H" href="index.html"> HOME </a>
  <a accesskey="A" href="about.html"> about </a>
+ <a href="rss.xml"> rss </a>
 </div><div id="content" class="content">
 <h1 class="title">理解 Y Combinator</h1>
 <p>
@@ -205,18 +206,18 @@
 有一章讲Y combinator讲得很详细的。不过当时看了没有理解明白。真正理解它
 的方式还是自己来推导一遍最好。
 </p>
-<div id="outline-container-org320f4ca" class="outline-2">
-<h2 id="org320f4ca">为什么要有Y combinator</h2>
-<div class="outline-text-2" id="text-org320f4ca">
+<div id="outline-container-orgcc9547e" class="outline-2">
+<h2 id="orgcc9547e">为什么要有Y combinator</h2>
+<div class="outline-text-2" id="text-orgcc9547e">
 <p>
 Y combinator提供了一种不用特殊手段就可以实现自引用(self-reference)
 的方式。像在Scheme中，定义全局函数也可以实现自引用, 比如下面的阶乘
 函数的实现：
 </p>
 <div class="org-src-container">
-<pre class="src src-scheme">(define fact
-  (lambda (n)
-    (if (&lt; n 2) 1
+<pre class="src src-scheme">(<span class="org-keyword">define</span> <span class="org-function-name">fact</span>
+  (<span class="org-keyword">lambda</span> (n)
+    (<span class="org-keyword">if</span> (&lt; n 2) 1
         (* n (fact (- n 1))))))     
 </pre>
 </div>
@@ -228,18 +229,17 @@ Y combinator提供了一种不用特殊手段就可以实现自引用(self-refer
 </p>
 </div>
 </div>
-
-<div id="outline-container-org7d9726f" class="outline-2">
-<h2 id="org7d9726f">如何推导出Y combinator</h2>
-<div class="outline-text-2" id="text-org7d9726f">
+<div id="outline-container-org65715d2" class="outline-2">
+<h2 id="org65715d2">如何推导出Y combinator</h2>
+<div class="outline-text-2" id="text-org65715d2">
 <p>
 The Little Schemer的第9章对于推导Y combinator讲得很详细。不过既然自
 己试着推导了一遍，记录一下也挺好。上面说到Y的目的就是不要有define，
 那么一个没有define的阶乘函数就是这样一个:
 </p>
 <div class="org-src-container">
-<pre class="src src-scheme">(lambda (n)
-  (if (&lt; n 2) 1
+<pre class="src src-scheme">(<span class="org-keyword">lambda</span> (n)
+  (<span class="org-keyword">if</span> (&lt; n 2) 1
       (* n (? (- n 1)))))
 </pre>
 </div>
@@ -248,8 +248,8 @@ The Little Schemer的第9章对于推导Y combinator讲得很详细。不过既�
 能计算阶乘1和2，比如下面的计算就是可以计算1的阶乘：
 </p>
 <div class="org-src-container">
-<pre class="src src-scheme">((lambda (n)
-   (if (&lt; n 2) 1
+<pre class="src src-scheme">((<span class="org-keyword">lambda</span> (n)
+   (<span class="org-keyword">if</span> (&lt; n 2) 1
        (* n (? (- n 1))))) 1)
 </pre>
 </div>
@@ -259,17 +259,16 @@ The Little Schemer的第9章对于推导Y combinator讲得很详细。不过既�
 就必须另找其它方法。
 </p>
 </div>
-
-<div id="outline-container-org51eab76" class="outline-3">
-<h3 id="org51eab76">一个神奇的函数</h3>
-<div class="outline-text-3" id="text-org51eab76">
+<div id="outline-container-orgf319f08" class="outline-3">
+<h3 id="orgf319f08">一个神奇的函数</h3>
+<div class="outline-text-3" id="text-orgf319f08">
 <p>
 先把?里面的东西放一下，来看一个神奇的函数:
 </p>
 <div class="org-src-container">
-<pre class="src src-scheme">((lambda (m)
+<pre class="src src-scheme">((<span class="org-keyword">lambda</span> (m)
    (m m))
- (lambda (l)
+ (<span class="org-keyword">lambda</span> (l)
    (l l)))
 </pre>
 </div>
@@ -277,9 +276,9 @@ The Little Schemer的第9章对于推导Y combinator讲得很详细。不过既�
 把这个函数展开:
 </p>
 <div class="org-src-container">
-<pre class="src src-scheme">((lambda (l)
+<pre class="src src-scheme">((<span class="org-keyword">lambda</span> (l)
    (l l))
- (lambda (l)
+ (<span class="org-keyword">lambda</span> (l)
    (l l)))
 </pre>
 </div>
@@ -290,19 +289,18 @@ The Little Schemer的第9章对于推导Y combinator讲得很详细。不过既�
 </p>
 </div>
 </div>
-
-<div id="outline-container-orgddb08fb" class="outline-3">
-<h3 id="orgddb08fb">转化一下，看起来快解决了</h3>
-<div class="outline-text-3" id="text-orgddb08fb">
+<div id="outline-container-org0c2b15d" class="outline-3">
+<h3 id="org0c2b15d">转化一下，看起来快解决了</h3>
+<div class="outline-text-3" id="text-org0c2b15d">
 <p>
 看了前面讲的那个不动点函数，我们可以找到?了。在找?之前，我们可以把?提出来，可能帮助理解。下面的转化还是那个只能求1和2的阶乘函数：
 </p>
 <div class="org-src-container">
-<pre class="src src-scheme">((lambda (m)
+<pre class="src src-scheme">((<span class="org-keyword">lambda</span> (m)
    (m ?))
- (lambda (l)
-   (lambda (n)
-     (if (&lt; n 2) 1
+ (<span class="org-keyword">lambda</span> (l)
+   (<span class="org-keyword">lambda</span> (n)
+     (<span class="org-keyword">if</span> (&lt; n 2) 1
        (* n (l (- n 1)))))))
 </pre>
 </div>
@@ -310,11 +308,11 @@ The Little Schemer的第9章对于推导Y combinator讲得很详细。不过既�
 你也可以在上面加入一点功能，让它能求3的阶乘：
 </p>
 <div class="org-src-container">
-<pre class="src src-scheme">((lambda (m)
+<pre class="src src-scheme">((<span class="org-keyword">lambda</span> (m)
    (m (m ?)))
- (lambda (l)
-   (lambda (n)
-     (if (&lt; n 2) 1
+ (<span class="org-keyword">lambda</span> (l)
+   (<span class="org-keyword">lambda</span> (n)
+     (<span class="org-keyword">if</span> (&lt; n 2) 1
        (* n (l (- n 1)))))))
 </pre>
 </div>
@@ -322,11 +320,11 @@ The Little Schemer的第9章对于推导Y combinator讲得很详细。不过既�
 也可以再加入4的阶乘的求解：
 </p>
 <div class="org-src-container">
-<pre class="src src-scheme">((lambda (m)
+<pre class="src src-scheme">((<span class="org-keyword">lambda</span> (m)
    (m (m (m ?))))
- (lambda (l)
-   (lambda (n)
-     (if (&lt; n 2) 1
+ (<span class="org-keyword">lambda</span> (l)
+   (<span class="org-keyword">lambda</span> (n)
+     (<span class="org-keyword">if</span> (&lt; n 2) 1
        (* n (l (- n 1)))))))
 </pre>
 </div>
@@ -334,11 +332,11 @@ The Little Schemer的第9章对于推导Y combinator讲得很详细。不过既�
 然后是5的阶乘：
 </p>
 <div class="org-src-container">
-<pre class="src src-scheme">((lambda (m)
+<pre class="src src-scheme">((<span class="org-keyword">lambda</span> (m)
    (m (m (m (m ?)))))
- (lambda (l)
-   (lambda (n)
-     (if (&lt; n 2) 1
+ (<span class="org-keyword">lambda</span> (l)
+   (<span class="org-keyword">lambda</span> (n)
+     (<span class="org-keyword">if</span> (&lt; n 2) 1
        (* n (l (- n 1)))))))
 </pre>
 </div>
@@ -346,11 +344,11 @@ The Little Schemer的第9章对于推导Y combinator讲得很详细。不过既�
 你会发现，这样挺累的。。。另外，你也注意到了在上面的求3，4，5的阶乘函数里的?是什么其实不重要。那就把它换成m吧！如下：
 </p>
 <div class="org-src-container">
-<pre class="src src-scheme">((lambda (m)
+<pre class="src src-scheme">((<span class="org-keyword">lambda</span> (m)
    (m m))
- (lambda (l)
-   (lambda (n)
-     (if (&lt; n 2) 1
+ (<span class="org-keyword">lambda</span> (l)
+   (<span class="org-keyword">lambda</span> (n)
+     (<span class="org-keyword">if</span> (&lt; n 2) 1
        (* n (l (- n 1)))))))
 </pre>
 </div>
@@ -359,16 +357,16 @@ The Little Schemer的第9章对于推导Y combinator讲得很详细。不过既�
 </p>
 </div>
 </div>
-<div id="outline-container-org09f11ec" class="outline-3">
-<h3 id="org09f11ec">那个神奇的函数</h3>
-<div class="outline-text-3" id="text-org09f11ec">
+<div id="outline-container-orgfd2af52" class="outline-3">
+<h3 id="orgfd2af52">那个神奇的函数</h3>
+<div class="outline-text-3" id="text-orgfd2af52">
 <p>
 你还记得那个神奇的函数不？
 </p>
 <div class="org-src-container">
-<pre class="src src-scheme">((lambda (m)
+<pre class="src src-scheme">((<span class="org-keyword">lambda</span> (m)
    (m m))
- (lambda (l)
+ (<span class="org-keyword">lambda</span> (l)
    (l l)))
 </pre>
 </div>
@@ -376,11 +374,11 @@ The Little Schemer的第9章对于推导Y combinator讲得很详细。不过既�
 想一想，把这个想法应用到前面最后我们转化的函数上：
 </p>
 <div class="org-src-container">
-<pre class="src src-scheme">((lambda (m)
+<pre class="src src-scheme">((<span class="org-keyword">lambda</span> (m)
    (m m))
- (lambda (l)
-   (lambda (n)
-     (if (&lt; n 2) 1
+ (<span class="org-keyword">lambda</span> (l)
+   (<span class="org-keyword">lambda</span> (n)
+     (<span class="org-keyword">if</span> (&lt; n 2) 1
        (* n ((l l) (- n 1)))))))
 </pre>
 </div>
@@ -390,16 +388,16 @@ The Little Schemer的第9章对于推导Y combinator讲得很详细。不过既�
 </p>
 </div>
 </div>
-<div id="outline-container-orgdfa68f4" class="outline-3">
-<h3 id="orgdfa68f4">收工</h3>
-<div class="outline-text-3" id="text-orgdfa68f4">
+<div id="outline-container-orgd45abe7" class="outline-3">
+<h3 id="orgd45abe7">收工</h3>
+<div class="outline-text-3" id="text-orgd45abe7">
 <p>
 上面最后我们已经实现了不用define进行自引用了。但是要看到Y
 combinator，需要整理一下上面的结果。首先(l l)是返回一个接收一个参
 数的函数，我们可以把它等价为(参考 The Little Schemer):
 </p>
 <div class="org-src-container">
-<pre class="src src-scheme">(lambda (x)
+<pre class="src src-scheme">(<span class="org-keyword">lambda</span> (x)
   ((l l) x))
 </pre>
 </div>
@@ -407,13 +405,13 @@ combinator，需要整理一下上面的结果。首先(l l)是返回一个接�
 那可以得到：
 </p>
 <div class="org-src-container">
-<pre class="src src-scheme">((lambda (m)
+<pre class="src src-scheme">((<span class="org-keyword">lambda</span> (m)
    (m m))
- (lambda (l)
-   ((lambda (f)
-      (if (&lt; n 2) 1
+ (<span class="org-keyword">lambda</span> (l)
+   ((<span class="org-keyword">lambda</span> (f)
+      (<span class="org-keyword">if</span> (&lt; n 2) 1
         (* n (f (- n 1)))))
-    (lambda (x)
+    (<span class="org-keyword">lambda</span> (x)
       ((l l) x)))))
 </pre>
 </div>
@@ -421,8 +419,8 @@ combinator，需要整理一下上面的结果。首先(l l)是返回一个接�
 进一步抽像出:
 </p>
 <div class="org-src-container">
-<pre class="src src-scheme">(lambda (f)
-  (if (&lt; n 2) 1
+<pre class="src src-scheme">(<span class="org-keyword">lambda</span> (f)
+  (<span class="org-keyword">if</span> (&lt; n 2) 1
     (* n (f (- n 1)))))
 
 </pre>
@@ -431,15 +429,15 @@ combinator，需要整理一下上面的结果。首先(l l)是返回一个接�
 就可以得到:
 </p>
 <div class="org-src-container">
-<pre class="src src-scheme">((lambda (fac)
-   ((lambda (m)
+<pre class="src src-scheme">((<span class="org-keyword">lambda</span> (fac)
+   ((<span class="org-keyword">lambda</span> (m)
       (m m))
-    (lambda (l)
-      (fac (lambda (x)
+    (<span class="org-keyword">lambda</span> (l)
+      (fac (<span class="org-keyword">lambda</span> (x)
              ((l l) x))))))
- (lambda (f)
-   (lambda (n)
-     (if (&lt; n 2) 1
+ (<span class="org-keyword">lambda</span> (f)
+   (<span class="org-keyword">lambda</span> (n)
+     (<span class="org-keyword">if</span> (&lt; n 2) 1
        (* n (f (- n 1)))))))
 </pre>
 </div>
@@ -447,10 +445,10 @@ combinator，需要整理一下上面的结果。首先(l l)是返回一个接�
 而上面的部分:
 </p>
 <div class="org-src-container">
-<pre class="src src-scheme">((lambda (m)
+<pre class="src src-scheme">((<span class="org-keyword">lambda</span> (m)
    (m m))
- (lambda (l)
-   (fac (lambda (x)
+ (<span class="org-keyword">lambda</span> (l)
+   (fac (<span class="org-keyword">lambda</span> (x)
           ((l l) x)))))
 </pre>
 </div>
@@ -458,20 +456,20 @@ combinator，需要整理一下上面的结果。首先(l l)是返回一个接�
 就是Y combinator，更规范一些的定义是:
 </p>
 <div class="org-src-container">
-<pre class="src src-scheme">(define Y
-  (lambda (fun)
-    ((lambda (m) (m m))
-     (lambda (m)
-       (fun (lambda (x) ((m m) x)))))))
+<pre class="src src-scheme">(<span class="org-keyword">define</span> <span class="org-function-name">Y</span>
+  (<span class="org-keyword">lambda</span> (fun)
+    ((<span class="org-keyword">lambda</span> (m) (m m))
+     (<span class="org-keyword">lambda</span> (m)
+       (fun (<span class="org-keyword">lambda</span> (x) ((m m) x)))))))
 </pre>
 </div>
 <p>
 这个函数Y接收一个参数fun,返回这个函数自身。举一个例子:
 </p>
 <div class="org-src-container">
-<pre class="src src-scheme">((Y (lambda (len)
-      (lambda (lst)
-        (if (null? lst) 0
+<pre class="src src-scheme">((Y (<span class="org-keyword">lambda</span> (len)
+      (<span class="org-keyword">lambda</span> (lst)
+        (<span class="org-keyword">if</span> (null? lst) 0
           (+ 1 (len (cdr lst))))))) '(a b c e))
 </pre>
 </div>

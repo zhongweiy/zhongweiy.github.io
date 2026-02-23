@@ -1001,3 +1001,35 @@
     margin-bottom: 5px; /* Add some spacing between links */
   }
 }
+
+/* Blog intro section on homepage */
+.blog-intro {
+    margin: 1em 0 0.5em 0;
+    padding: 0;
+    line-height: 1.6;
+    color: #444;
+}
+
+.blog-intro p {
+    margin: 0.4em 0;
+}
+
+.blog-intro a {
+    color: #0066cc;
+    text-decoration: none;
+}
+
+.blog-intro a:hover {
+    text-decoration: underline;
+}
+
+/* RSS link in nav bar */
+#org-div-home-and-up a {
+    margin-right: 0.8em;
+}
+
+/* Cap image size globally */
+#content img {
+    max-width: 100%;
+    height: auto;
+}

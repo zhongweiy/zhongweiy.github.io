@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Zhongwei Yao — Compilers, VMs &amp; Systems Programming</title>
+    <link>https://zhongweiy.github.io/</link>
+    <description>Deep dives into compilers, virtual machines, and low-level debugging.</description>
+    <language>en-us</language>
+    <atom:link href="https://zhongweiy.github.io/rss.xml" rel="self" type="application/rss+xml"/>
+    <lastBuildDate>Sun, 22 Feb 2026 20:22:54 -0800</lastBuildDate>
+    <item>
+      <title>Why fork+exec Takes 100ms on My Mac: Debugging Slow Emacs with Instruments</title>
+      <link>https://zhongweiy.github.io/emacs_slow_on_macos.html</link>
+      <guid>https://zhongweiy.github.io/emacs_slow_on_macos.html</guid>
+      <pubDate>Sun, 22 Feb 2026 00:00:00 -0800</pubDate>
+      <author>Zhongwei Yao</author>
+    </item>
+    <item>
+      <title>How scalar evolution is used to do optimization in LuaJIT</title>
+      <link>https://zhongweiy.github.io/scalar_evolution_application_in_LuaJIT.html</link>
+      <guid>https://zhongweiy.github.io/scalar_evolution_application_in_LuaJIT.html</guid>
+      <pubDate>Sat, 15 Jun 2024 00:00:00 -0700</pubDate>
+      <author>Zhongwei Yao</author>
+    </item>
+    <item>
+      <title>Reification call stack by coroutine</title>
+      <link>https://zhongweiy.github.io/reification_call_stack_by_coroutine.html</link>
+      <guid>https://zhongweiy.github.io/reification_call_stack_by_coroutine.html</guid>
+      <pubDate>Sun, 12 May 2024 00:00:00 -0700</pubDate>
+      <author>Zhongwei Yao</author>
+    </item>
+    <item>
+      <title>LuaJIT bad FFI callback issue</title>
+      <link>https://zhongweiy.github.io/luajit_ffi_bad_callback.html</link>
+      <guid>https://zhongweiy.github.io/luajit_ffi_bad_callback.html</guid>
+      <pubDate>Sat, 04 May 2024 00:00:00 -0700</pubDate>
+      <author>Zhongwei Yao</author>
+    </item>
+    <item>
+      <title>Troubleshooting an intermittent error by RR</title>
+      <link>https://zhongweiy.github.io/troubleshooting_an_intermittent_error_by_rr.html</link>
+      <guid>https://zhongweiy.github.io/troubleshooting_an_intermittent_error_by_rr.html</guid>
+      <pubDate>Wed, 04 Oct 2023 00:00:00 -0700</pubDate>
+      <author>Zhongwei Yao</author>
+    </item>
+    <item>
+      <title>Solve Emacs Not Compiled With Dbus Support issue</title>
+      <link>https://zhongweiy.github.io/solve_error_emacs_not_compiled-with-dbus-support.html</link>
+      <guid>https://zhongweiy.github.io/solve_error_emacs_not_compiled-with-dbus-support.html</guid>
+      <pubDate>Wed, 03 Feb 2016 00:00:00 -0800</pubDate>
+      <author>Zhongwei Yao</author>
+    </item>
+    <item>
+      <title>理解 Y Combinator</title>
+      <link>https://zhongweiy.github.io/Y_combinator.html</link>
+      <guid>https://zhongweiy.github.io/Y_combinator.html</guid>
+      <pubDate>Sun, 18 Jan 2015 00:00:00 -0800</pubDate>
+      <author>Zhongwei Yao</author>
+    </item>
+  </channel>
+</rss>

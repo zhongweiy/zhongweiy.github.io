@@ -1,0 +1,639 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
+<head>
+<meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Why fork+exec Takes 100ms on My Mac: Debugging Slow Emacs with Instruments</title>
+<meta name="generator" content="Org Mode" />
+<style type="text/css">
+  #content { max-width: 60em; margin: auto; }
+  .title  { text-align: center;
+             margin-bottom: .2em; }
+  .subtitle { text-align: center;
+              font-size: medium;
+              font-weight: bold;
+              margin-top:0; }
+  .todo   { font-family: monospace; color: red; }
+  .done   { font-family: monospace; color: green; }
+  .priority { font-family: monospace; color: orange; }
+  .tag    { background-color: #eee; font-family: monospace;
+            padding: 2px; font-size: 80%; font-weight: normal; }
+  .timestamp { color: #bebebe; }
+  .timestamp-kwd { color: #5f9ea0; }
+  .org-right  { margin-left: auto; margin-right: 0px;  text-align: right; }
+  .org-left   { margin-left: 0px;  margin-right: auto; text-align: left; }
+  .org-center { margin-left: auto; margin-right: auto; text-align: center; }
+  .underline { text-decoration: underline; }
+  #postamble p, #preamble p { font-size: 90%; margin: .2em; }
+  p.verse { margin-left: 3%; }
+  pre {
+    border: 1px solid #e6e6e6;
+    border-radius: 3px;
+    background-color: #f2f2f2;
+    padding: 8pt;
+    font-family: monospace;
+    overflow: auto;
+    margin: 1.2em;
+  }
+  pre.src {
+    position: relative;
+    overflow: auto;
+  }
+  pre.src:before {
+    display: none;
+    position: absolute;
+    top: -8px;
+    right: 12px;
+    padding: 3px;
+    color: #555;
+    background-color: #f2f2f299;
+  }
+  pre.src:hover:before { display: inline; margin-top: 14px;}
+  /* Languages per Org manual */
+  pre.src-asymptote:before { content: 'Asymptote'; }
+  pre.src-awk:before { content: 'Awk'; }
+  pre.src-authinfo::before { content: 'Authinfo'; }
+  pre.src-C:before { content: 'C'; }
+  /* pre.src-C++ doesn't work in CSS */
+  pre.src-clojure:before { content: 'Clojure'; }
+  pre.src-css:before { content: 'CSS'; }
+  pre.src-D:before { content: 'D'; }
+  pre.src-ditaa:before { content: 'ditaa'; }
+  pre.src-dot:before { content: 'Graphviz'; }
+  pre.src-calc:before { content: 'Emacs Calc'; }
+  pre.src-emacs-lisp:before { content: 'Emacs Lisp'; }
+  pre.src-fortran:before { content: 'Fortran'; }
+  pre.src-gnuplot:before { content: 'gnuplot'; }
+  pre.src-haskell:before { content: 'Haskell'; }
+  pre.src-hledger:before { content: 'hledger'; }
+  pre.src-java:before { content: 'Java'; }
+  pre.src-js:before { content: 'Javascript'; }
+  pre.src-latex:before { content: 'LaTeX'; }
+  pre.src-ledger:before { content: 'Ledger'; }
+  pre.src-lisp:before { content: 'Lisp'; }
+  pre.src-lilypond:before { content: 'Lilypond'; }
+  pre.src-lua:before { content: 'Lua'; }
+  pre.src-matlab:before { content: 'MATLAB'; }
+  pre.src-mscgen:before { content: 'Mscgen'; }
+  pre.src-ocaml:before { content: 'Objective Caml'; }
+  pre.src-octave:before { content: 'Octave'; }
+  pre.src-org:before { content: 'Org mode'; }
+  pre.src-oz:before { content: 'OZ'; }
+  pre.src-plantuml:before { content: 'Plantuml'; }
+  pre.src-processing:before { content: 'Processing.js'; }
+  pre.src-python:before { content: 'Python'; }
+  pre.src-R:before { content: 'R'; }
+  pre.src-ruby:before { content: 'Ruby'; }
+  pre.src-sass:before { content: 'Sass'; }
+  pre.src-scheme:before { content: 'Scheme'; }
+  pre.src-screen:before { content: 'Gnu Screen'; }
+  pre.src-sed:before { content: 'Sed'; }
+  pre.src-sh:before { content: 'shell'; }
+  pre.src-sql:before { content: 'SQL'; }
+  pre.src-sqlite:before { content: 'SQLite'; }
+  /* additional languages in org.el's org-babel-load-languages alist */
+  pre.src-forth:before { content: 'Forth'; }
+  pre.src-io:before { content: 'IO'; }
+  pre.src-J:before { content: 'J'; }
+  pre.src-makefile:before { content: 'Makefile'; }
+  pre.src-maxima:before { content: 'Maxima'; }
+  pre.src-perl:before { content: 'Perl'; }
+  pre.src-picolisp:before { content: 'Pico Lisp'; }
+  pre.src-scala:before { content: 'Scala'; }
+  pre.src-shell:before { content: 'Shell Script'; }
+  pre.src-ebnf2ps:before { content: 'ebfn2ps'; }
+  /* additional language identifiers per "defun org-babel-execute"
+       in ob-*.el */
+  pre.src-cpp:before  { content: 'C++'; }
+  pre.src-abc:before  { content: 'ABC'; }
+  pre.src-coq:before  { content: 'Coq'; }
+  pre.src-groovy:before  { content: 'Groovy'; }
+  /* additional language identifiers from org-babel-shell-names in
+     ob-shell.el: ob-shell is the only babel language using a lambda to put
+     the execution function name together. */
+  pre.src-bash:before  { content: 'bash'; }
+  pre.src-csh:before  { content: 'csh'; }
+  pre.src-ash:before  { content: 'ash'; }
+  pre.src-dash:before  { content: 'dash'; }
+  pre.src-ksh:before  { content: 'ksh'; }
+  pre.src-mksh:before  { content: 'mksh'; }
+  pre.src-posh:before  { content: 'posh'; }
+  /* Additional Emacs modes also supported by the LaTeX listings package */
+  pre.src-ada:before { content: 'Ada'; }
+  pre.src-asm:before { content: 'Assembler'; }
+  pre.src-caml:before { content: 'Caml'; }
+  pre.src-delphi:before { content: 'Delphi'; }
+  pre.src-html:before { content: 'HTML'; }
+  pre.src-idl:before { content: 'IDL'; }
+  pre.src-mercury:before { content: 'Mercury'; }
+  pre.src-metapost:before { content: 'MetaPost'; }
+  pre.src-modula-2:before { content: 'Modula-2'; }
+  pre.src-pascal:before { content: 'Pascal'; }
+  pre.src-ps:before { content: 'PostScript'; }
+  pre.src-prolog:before { content: 'Prolog'; }
+  pre.src-simula:before { content: 'Simula'; }
+  pre.src-tcl:before { content: 'tcl'; }
+  pre.src-tex:before { content: 'TeX'; }
+  pre.src-plain-tex:before { content: 'Plain TeX'; }
+  pre.src-verilog:before { content: 'Verilog'; }
+  pre.src-vhdl:before { content: 'VHDL'; }
+  pre.src-xml:before { content: 'XML'; }
+  pre.src-nxml:before { content: 'XML'; }
+  /* add a generic configuration mode; LaTeX export needs an additional
+     (add-to-list 'org-latex-listings-langs '(conf " ")) in .emacs */
+  pre.src-conf:before { content: 'Configuration File'; }
+
+  table { border-collapse:collapse; }
+  caption.t-above { caption-side: top; }
+  caption.t-bottom { caption-side: bottom; }
+  td, th { vertical-align:top;  }
+  th.org-right  { text-align: center;  }
+  th.org-left   { text-align: center;   }
+  th.org-center { text-align: center; }
+  td.org-right  { text-align: right;  }
+  td.org-left   { text-align: left;   }
+  td.org-center { text-align: center; }
+  dt { font-weight: bold; }
+  .footpara { display: inline; }
+  .footdef  { margin-bottom: 1em; }
+  .figure { padding: 1em; }
+  .figure p { text-align: center; }
+  .equation-container {
+    display: table;
+    text-align: center;
+    width: 100%;
+  }
+  .equation {
+    vertical-align: middle;
+  }
+  .equation-label {
+    display: table-cell;
+    text-align: right;
+    vertical-align: middle;
+  }
+  .inlinetask {
+    padding: 10px;
+    border: 2px solid gray;
+    margin: 10px;
+    background: #ffffcc;
+  }
+  #org-div-home-and-up
+   { text-align: right; font-size: 70%; white-space: nowrap; }
+  textarea { overflow-x: auto; }
+  .linenr { font-size: smaller }
+  .code-highlighted { background-color: #ffff00; }
+  .org-info-js_info-navigation { border-style: none; }
+  #org-info-js_console-label
+    { font-size: 10px; font-weight: bold; white-space: nowrap; }
+  .org-info-js_search-highlight
+    { background-color: #ffff00; color: #000000; font-weight: bold; }
+  .org-svg { }
+</style>
+<link rel="stylesheet" href="./worg.css" type="text/css"/>
+<link rel="stylesheet" href="./htmlize.css" type="text/css"/><link rel="alternate" type="application/rss+xml" title="Zhongwei Yao — Compilers, VMs & Systems Programming" href="https://zhongweiy.github.io/rss.xml"/>
+</head>
+<body>
+<div id="org-div-home-and-up">
+ <a accesskey="H" href="index.html"> HOME </a>
+ <a accesskey="A" href="about.html"> about </a>
+ <a href="rss.xml"> rss </a>
+</div><div id="content" class="content">
+<h1 class="title">Why fork+exec Takes 100ms on My Mac: Debugging Slow Emacs with Instruments</h1>
+<div id="outline-container-orgf6aff50" class="outline-2">
+<h2 id="orgf6aff50">Summary</h2>
+<div class="outline-text-2" id="text-orgf6aff50">
+<p>
+  Magit was taking 3 seconds on a small repo. The culprit: OCLP's system
+library patches invalidate macOS dyld shared cache closures, causing
+every <code>fork+exec</code> to fall back to <code>JustInTimeLoader</code> at ~100ms per
+process launch. Magit spawns ~25 git processes per <code>magit-status</code>.
+</p>
+</div>
+</div>
+<div id="outline-container-org8a4d257" class="outline-2">
+<h2 id="org8a4d257">Introduction</h2>
+<div class="outline-text-2" id="text-org8a4d257">
+<p>
+I found my fresh Emacs install is slow on macOS 15, especially when
+running Magit on a tiny git repo. For example, it takes 2~3 seconds to
+run the <code>magit-status</code> command.
+</p>
+
+<p>
+I tried several tweaks like DNS resolving and switching to a plain
+Emacs config (<code>emacs -Q</code>), but none of them worked. I decided to do
+further investigation by profiling.
+</p>
+</div>
+</div>
+<div id="outline-container-orgf760650" class="outline-2">
+<h2 id="orgf760650">First Profiling Tool: the Emacs Built-in Profiler</h2>
+<div class="outline-text-2" id="text-orgf760650">
+<p>
+Emacs has a built-in profiler. It can be used as:
+</p>
+<div class="org-src-container">
+<pre class="src src-elisp">profiler-start
+<span class="org-comment-delimiter">;; </span><span class="org-comment">run profiler-report to get the result.</span>
+</pre>
+</div>
+<p>
+Here is the report when running <code>magit-status</code> on the small git repo:
+</p>
+<div class="org-src-container">
+<pre class="src src-elisp">95% - ...
+95%  - list
+95%   - cons
+95%    - cons
+95%     - cons
+95%      - cons
+95%       - cons
+95%        - cons
+95%         - cons
+95%          - eval-expression--debug
+95%           - debug
+95%            - recursive-edit
+95%             - command-execute
+95%              - call-interactively
+78%               - byte-code
+78%                - read-extended-command
+78%                 - read-extended-command-1
+78%                  - completing-read
+78%                   - completing-read-default
+78%                    - read-from-minibuffer
+31%                     + redisplay_internal (C function)
+15%                     + icomplete-post-command-hook
+ 0%                     + command-execute
+ 0%                     + timer-event-handler
+ 0%                     + minibuffer-inactive-mode
+16%               + funcall-interactively
+ 0%             + redisplay_internal (C function)
+ 4%   Automatic GC
+</pre>
+</div>
+<p>
+Nothing hot on the CPU is related to Magit. This makes sense — the
+CPU profiler only shows on-CPU time, but Magit's slowness may be in
+waiting for I/O (off-CPU). This is why off-CPU(Off-CPU profiling
+<a href="https://www.brendangregg.com/offcpuanalysis.html">https://www.brendangregg.com/offcpuanalysis.html</a>) profiling matters.
+</p>
+
+<p>
+I turned to the ELP profiler, which is a tracing tool that helps
+identify I/O issues, such as when the code is scheduled out and not
+running on CPU. It simply records the timestamp when a function
+starts and when it ends, reporting the wall-clock time it takes.
+</p>
+
+<p>
+The <code>magit-toggle-profiling</code> command can do the work. Run
+<code>magit-toggle-profiling</code>, then run <code>magit-status</code>. After it finishes,
+run <code>magit-toggle-profiling</code> again to show the following result:
+</p>
+<div class="org-src-container">
+<pre class="src src-nil">  ;; time is in seconds.
+
+Function Name            Call Count  Elapsed Time  Average Time
+magit-run-section-hook   2           4.043413      2.0217065
+magit-process-git        25          3.587962      0.14351848
+magit-process-file       25          3.587085      0.1434834
+magit-status             1           3.373008      3.373008
+...
+</pre>
+</div>
+
+<p>
+The above result is a little confusing if you are not familiar with
+Magit's implementation. Each line is independent, and
+<code>magit-process-git</code> actually calls <code>magit-process-file</code> internally,
+so the "Elapsed Time" and "Call Count" are almost the same. At least
+we know the slowness is caused by <code>magit-process-file</code>. It would be better
+to use a real Off-CPU profiler to get the whole picture of what is going on.
+</p>
+</div>
+</div>
+<div id="outline-container-org25994be" class="outline-2">
+<h2 id="org25994be">Profiling with Instruments</h2>
+<div class="outline-text-2" id="text-org25994be">
+<p>
+The Instruments profiler included in Xcode can do Off-CPU profiling by
+using the "Time Profiler" with "Record Waiting Threads" enabled
+in the Time Profiler's config.
+</p>
+
+
+<div id="org6a4df7d" class="figure">
+<p><img src="./imgs/emacs_profile_flame_graph.png" alt="emacs_profile_flame_graph.png" />
+</p>
+<p><span class="figure-number">Figure 1: </span>Emacs Profiling Flame Graph</p>
+</div>
+
+<p>
+The above flame graph was captured while the <code>magit-status</code> command
+was running. There is a big portion of the graph related to the <code>read</code>
+syscall, as highlighted. Other parts like <code>pselect</code> are
+irrelevant to the slowness in Magit, because from the call stack we
+can tell they come from the <code>read_key_sequence</code> function, which handles
+user input.
+</p>
+
+<p>
+Besides the "Time Profiler", Instruments can also record a
+"System Call Trace". So if we click the <code>read</code> in the flame graph,
+we can see the time spent in it and the <code>read</code> syscall's arguments,
+as shown below. It is reading file descriptor 8, and it spends 250.4ms
+waiting in the first call. The total time spent in the <code>read</code> syscall
+is around 3 seconds and matches the time to run <code>magit-status</code>.
+</p>
+
+<p>
+<b>So the slow <code>read</code> syscall is causing the issue.</b>
+</p>
+<div class="org-src-container">
+<pre class="src src-nil">CPU Time=1.41 ms	Wait Time=250.40 ms	Emacs-x86_64-10_14 (33755)	Main Thread 0x304972	read(fd:8, buf:0x7ff7bc6a4f40, len:16.00 KiB) = 16.00 KiB 0x8	0x7ff7bc6a4f40	0x4000	0x10	0x4000	0x0	n/a
+CPU Time=272.95 µs	Wait Time=122.76 ms	Emacs-x86_64-10_14 (33755)	Main Thread 0x304972	read(fd:8, buf:0x7ff7bc6a4ee0, len:16.00 KiB) = 0 Bytes0x8	0x7ff7bc6a4ee0	0x4000	0x10	0x0	0x4	end-of-file was encountered
+CPU Time=343.33 µs	Wait Time=120.95 ms	Emacs-x86_64-10_14 (33755)	Main Thread 0x304972	read(fd:8, buf:0x7ff7bc6a4f10, len:16.00 KiB) = 0 Bytes 0x8	0x7ff7bc6a4f10	0x4000	0x10	0x0	0x0	end-of-file was encountered
+.
+.
+.
+about 30 more similar read calls with the same fd:8
+</pre>
+</div>
+</div>
+</div>
+<div id="outline-container-orgf6b5937" class="outline-2">
+<h2 id="orgf6b5937">Connecting the Dots between ELP Magit Tracing and Instruments Tracing</h2>
+<div class="outline-text-2" id="text-orgf6b5937">
+<p>
+Unfortunately, Instruments does not understand Elisp
+interpreter frames and only shows C functions in the call
+stack. So just from the call stack in the flame graph, we cannot tell which
+Elisp function calls into the <code>read</code> syscall.
+</p>
+
+<p>
+So let's check what <code>fd:8</code> is in the above <code>read</code> syscall. Is it
+a file in the git repo being read by <code>magit-status</code> that causes the
+slowness?
+</p>
+
+<p>
+Running the following command while <code>magit-status</code> runs shows that <code>fd:8</code>
+is actually a <code>PIPE</code>:
+</p>
+<div class="org-src-container">
+<pre class="src src-bash"><span class="org-comment-delimiter"># </span><span class="org-comment">capture what is fd:8
+</span><span class="org-keyword">while </span><span class="org-builtin">true</span>; <span class="org-keyword">do</span> lsof -p $(pgrep -f <span class="org-string">"emacs"</span>) | grep -E <span class="org-string">"8u"</span>; sleep 0.1; <span class="org-keyword">done</span>
+</pre>
+</div>
+
+<p>
+This makes sense. From the flame graph's call stack of the
+<code>read</code> syscall, it comes from Emacs's <code>call_process</code> function, and the
+ELP results show that the slow function is <code>magit-process-file</code>, which
+internally calls <code>call_process</code>. It turns out Magit uses <code>fd:8</code>,
+a PIPE, to read the output of the <code>git</code> command. As shown by the
+following log, if we capture <code>magit-process-file</code>'s arguments by:
+</p>
+<div class="org-src-container">
+<pre class="src src-elisp">(<span class="org-keyword">defun</span> <span class="org-function-name">my-magit-time-process-file</span> (orig-fn program <span class="org-type">&amp;rest</span> args)
+  (<span class="org-keyword">let</span> ((start (current-time)))
+    (<span class="org-keyword">prog1</span> (apply orig-fn program args)
+      (<span class="org-keyword">let</span> ((elapsed (float-time (time-subtract (current-time) start))))
+        (<span class="org-keyword">when</span> (&gt; elapsed 0.01)
+          <span class="org-comment-delimiter">;; </span><span class="org-comment">Extract just the git arguments (skip nil and file handles)
+</span>          (<span class="org-keyword">let*</span> ((git-args (seq-filter #'stringp (flatten-list args)))
+                 (cmd (string-join (cons program git-args) <span class="org-string">" "</span>)))
+            (message <span class="org-string">"\n[MAGIT] %.3fs:\n  %s\n"</span> elapsed cmd)))))))
+
+(advice-add 'magit-process-file <span class="org-builtin">:around</span> #'my-magit-time-process-file)
+</pre>
+</div>
+
+<p>
+We will see what <code>magit-process-file</code> is doing during <code>magit-status</code>:
+</p>
+<div class="org-src-container">
+<pre class="src src-bash">[MAGIT] 0.104s:
+  /usr/local/bin/git --no-pager --literal-pathspecs -c core.preloadIndex=true -c log.showSignature=false -c color.ui=false -c color.diff=false -c diff.noPrefix=false config --list -z
+[MAGIT] 0.097s:
+  /usr/local/bin/git --no-pager --literal-pathspecs -c core.preloadIndex=true -c log.showSignature=false -c color.ui=false -c color.diff=false -c diff.noPrefix=false log --no-walk --format=%h %s HEAD^{commit} --
+[MAGIT] 0.092s:
+  /usr/local/bin/git --no-pager --literal-pathspecs -c core.preloadIndex=true -c log.showSignature=false -c color.ui=false -c color.diff=false -c diff.noPrefix=false symbolic-ref --short HEAD
+</pre>
+</div>
+</div>
+</div>
+<div id="outline-container-org407e3e1" class="outline-2">
+<h2 id="org407e3e1">Why Is the <code>read</code> Syscall Slow?</h2>
+<div class="outline-text-2" id="text-org407e3e1">
+<p>
+As we saw in the last section, the <code>read</code> syscall reads from a
+PIPE to get <code>git</code>'s output. So it is not the <code>read</code> syscall itself that
+is slow; the slowness comes from the forked child process, and the parent
+process just uses <code>read</code> to wait for the child process to produce output.
+</p>
+
+<p>
+A test like below shows how slow creating a new process is when running an executable:
+</p>
+<div class="org-src-container">
+<pre class="src src-c"><span class="org-preprocessor">#include</span> <span class="org-string">&lt;stdio.h&gt;</span>
+<span class="org-preprocessor">#include</span> <span class="org-string">&lt;stdlib.h&gt;</span>
+<span class="org-preprocessor">#include</span> <span class="org-string">&lt;string.h&gt;</span>
+<span class="org-preprocessor">#include</span> <span class="org-string">&lt;unistd.h&gt;</span>
+<span class="org-preprocessor">#include</span> <span class="org-string">&lt;sys/time.h&gt;</span>
+<span class="org-preprocessor">#include</span> <span class="org-string">&lt;sys/wait.h&gt;</span>
+
+<span class="org-type">double</span> <span class="org-function-name">get_time_ms</span>(<span class="org-type">void</span>) {
+    <span class="org-keyword">struct</span> <span class="org-type">timeval</span> <span class="org-variable-name">tv</span>;
+    gettimeofday(&amp;tv, <span class="org-constant">NULL</span>);
+    <span class="org-keyword">return</span> tv.tv_sec * 1000.0 + tv.tv_usec / 1000.0;
+}
+
+<span class="org-type">int</span> <span class="org-function-name">main</span>(<span class="org-type">int</span> <span class="org-variable-name">argc</span>, <span class="org-type">char</span> *<span class="org-variable-name">argv</span>[]) {
+    <span class="org-type">int</span> <span class="org-variable-name">iterations</span> = 5;
+
+    <span class="org-comment-delimiter">/* </span><span class="org-comment">Test 1: fork + _exit (no exec)</span><span class="org-comment-delimiter"> */</span>
+    printf(<span class="org-string">"=== Test 1: fork + _exit (no exec) ===\n"</span>);
+    <span class="org-keyword">for</span> (<span class="org-type">int</span> <span class="org-variable-name">i</span> = 0; i &lt; iterations; i++) {
+        <span class="org-type">double</span> <span class="org-variable-name">start</span> = get_time_ms();
+        <span class="org-type">pid_t</span> <span class="org-variable-name">pid</span> = fork();
+        <span class="org-keyword">if</span> (pid == 0) {
+            _exit(0);
+        }
+        <span class="org-type">int</span> <span class="org-variable-name">status</span>;
+        waitpid(pid, &amp;status, 0);
+        printf(<span class="org-string">"  %d: %.3f ms\n"</span>, i + 1, get_time_ms() - start);
+    }
+
+    <span class="org-comment-delimiter">/* </span><span class="org-comment">Test 2: fork + exec /usr/bin/true</span><span class="org-comment-delimiter"> */</span>
+    printf(<span class="org-string">"\n=== Test 2: fork + exec /usr/bin/true ===\n"</span>);
+    <span class="org-keyword">for</span> (<span class="org-type">int</span> <span class="org-variable-name">i</span> = 0; i &lt; iterations; i++) {
+        <span class="org-type">double</span> <span class="org-variable-name">start</span> = get_time_ms();
+        <span class="org-type">pid_t</span> <span class="org-variable-name">pid</span> = fork();
+        <span class="org-keyword">if</span> (pid == 0) {
+            <span class="org-type">char</span> *<span class="org-variable-name">args</span>[] = {<span class="org-string">"/usr/bin/true"</span>, <span class="org-constant">NULL</span>};
+            execv(<span class="org-string">"/usr/bin/true"</span>, args);
+            _exit(1);
+        }
+        <span class="org-type">int</span> <span class="org-variable-name">status</span>;
+        waitpid(pid, &amp;status, 0);
+        printf(<span class="org-string">"  %d: %.3f ms\n"</span>, i + 1, get_time_ms() - start);
+    }
+
+    <span class="org-keyword">return</span> 0;
+}
+
+</pre>
+</div>
+
+<div class="org-src-container">
+<pre class="src src-nil">=== Test 1: fork + _exit (no exec) ===
+  1: 0.864 ms
+  2: 0.643 ms
+  3: 0.620 ms
+  4: 0.601 ms
+  5: 0.621 ms
+
+=== Test 2: fork + exec /usr/bin/true ===
+  1: 108.289 ms
+  2: 100.957 ms
+  3: 100.923 ms
+  4: 95.505 ms
+  5: 92.196 ms
+</pre>
+</div>
+
+<p>
+The <code>fork</code> alone takes less than 1ms, but <code>fork + exec</code> takes ~100ms.
+</p>
+
+<p>
+The Instruments profiler cannot follow the forked
+process during profiling, so the following tweak is needed to enable
+profiling on the forked process:
+</p>
+<div class="org-src-container">
+<pre class="src src-c"><span class="org-comment-delimiter">/*</span><span class="org-comment">
+ *   1. fork()
+ *   2. Child: stop itself with SIGSTOP before exec
+ *   3. Parent: print the child PID and wait for you to attach Instruments
+ *   4. After you press Enter, parent sends SIGCONT to resume the child
+ *   5. Child does exec()
+</span><span class="org-comment-delimiter"> */</span>
+<span class="org-preprocessor">#include</span> <span class="org-string">&lt;stdio.h&gt;</span>
+<span class="org-preprocessor">#include</span> <span class="org-string">&lt;stdlib.h&gt;</span>
+<span class="org-preprocessor">#include</span> <span class="org-string">&lt;unistd.h&gt;</span>
+<span class="org-preprocessor">#include</span> <span class="org-string">&lt;signal.h&gt;</span>
+<span class="org-preprocessor">#include</span> <span class="org-string">&lt;sys/wait.h&gt;</span>
+
+<span class="org-type">int</span> <span class="org-function-name">main</span>(<span class="org-type">int</span> <span class="org-variable-name">argc</span>, <span class="org-type">char</span> *<span class="org-variable-name">argv</span>[]) {
+    <span class="org-keyword">if</span> (argc &lt; 2) {
+        fprintf(stderr, <span class="org-string">"Usage: %s &lt;program&gt; [args...]\n"</span>, argv[0]);
+        fprintf(stderr, <span class="org-string">"Example: %s /usr/local/bin/git --version\n"</span>, argv[0]);
+        <span class="org-keyword">return</span> 1;
+    }
+
+    <span class="org-type">pid_t</span> <span class="org-variable-name">pid</span> = fork();
+
+    <span class="org-keyword">if</span> (pid == 0) {
+        <span class="org-comment-delimiter">/* </span><span class="org-comment">Child: stop ourselves, then exec</span><span class="org-comment-delimiter"> */</span>
+        raise(SIGSTOP);
+        execvp(argv[1], &amp;argv[1]);
+        perror(<span class="org-string">"exec failed"</span>);
+        _exit(1);
+    }
+
+    <span class="org-comment-delimiter">/* </span><span class="org-comment">Parent: wait for child to stop</span><span class="org-comment-delimiter"> */</span>
+    <span class="org-type">int</span> <span class="org-variable-name">status</span>;
+    waitpid(pid, &amp;status, WUNTRACED);
+
+    printf(<span class="org-string">"Child PID: %d\n"</span>, pid);
+    printf(<span class="org-string">"Attach Instruments to PID %d now.\n"</span>, pid);
+    printf(<span class="org-string">"  In Instruments: File -&gt; Record Options -&gt; Attach to Process -&gt; %d\n"</span>, pid);
+    printf(<span class="org-string">"  Enable 'Record Waiting Threads' in Time Profiler settings.\n"</span>);
+    printf(<span class="org-string">"Press Enter to resume the child and start exec...\n"</span>);
+    getchar();
+
+    kill(pid, SIGCONT);
+    waitpid(pid, &amp;status, 0);
+
+    printf(<span class="org-string">"Child exited with status %d\n"</span>, WEXITSTATUS(status));
+    <span class="org-keyword">return</span> 0;
+}
+</pre>
+</div>
+
+<p>
+And here is the flame graph:
+</p>
+
+
+<div id="orgf98b4d1" class="figure">
+<p><img src="./imgs/test_fork_exec_profile_flame_graph.png" alt="test_fork_exec_profile_flame_graph.png" />
+</p>
+<p><span class="figure-number">Figure 2: </span>Test Fork and Exec Profiling Flame Graph</p>
+</div>
+
+<p>
+For even a simple program like <code>/usr/bin/true</code>, most of the time is spent in
+<code>JustInTimeLoader</code>. This is slow and unusual.
+</p>
+
+<p>
+macOS 15 is installed on my old Intel MacBook. Version 15 is not
+officially supported on this hardware, and I installed it using the
+OCLP tool. OCLP modifies system libraries to patch the OS for
+unsupported hardware. This likely invalidates the dyld shared cache
+closures stored in <code>/var/db/dyld/</code>, forcing dyld to fall back from
+<code>PrebuiltLoader</code> (which is fast) to <code>JustInTimeLoader</code> for every
+process launch. Normally dyld uses pre-computed closures in
+<code>/var/db/dyld/</code> to load shared libraries fast, but when the libraries
+are modified (as OCLP does), these closures become invalid and dyld
+must resolve everything at runtime.
+</p>
+
+<p>
+If you run the fork+exec test takes &gt;50ms, you may have a
+similar dyld cache issue.
+</p>
+</div>
+</div>
+<div id="outline-container-org446fe13" class="outline-2">
+<h2 id="org446fe13">The Solution</h2>
+<div class="outline-text-2" id="text-org446fe13">
+<p>
+So far, there is no perfect solution. There is a project called
+magit-libgit, which avoids creating new processes, but it is not
+well maintained and is incomplete.
+</p>
+
+<p>
+Another solution is to reduce the number of git calls by:
+</p>
+<div class="org-src-container">
+<pre class="src src-elisp">(<span class="org-keyword">with-eval-after-load</span> 'magit
+    (<span class="org-keyword">setq</span> magit-status-sections-hook
+          '(magit-insert-head-branch-header
+            magit-insert-unstaged-changes
+            magit-insert-staged-changes
+            magit-insert-untracked-files))
+    (<span class="org-keyword">setq</span> magit-status-headers-hook
+          '(magit-insert-head-branch-header))
+    (<span class="org-keyword">setq</span> magit-refresh-status-buffer nil))
+</pre>
+</div>
+<p>
+This reduces the 2~3 seconds to about 1 second.
+</p>
+</div>
+</div>
+</div>
+<div id="postamble" class="status">
+<p class="date">Date: 2026-02-22 Sun 00:00</p>
+</div>
+</body>
+</html>

@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>Solve Emacs Not Compiled With Dbus Support issue</title>
 <meta name="generator" content="Org Mode" />
-<style>
+<style type="text/css">
   #content { max-width: 60em; margin: auto; }
   .title  { text-align: center;
              margin-bottom: .2em; }
@@ -192,18 +192,18 @@
   .org-svg { }
 </style>
 <link rel="stylesheet" href="./worg.css" type="text/css"/>
+<link rel="stylesheet" href="./htmlize.css" type="text/css"/><link rel="alternate" type="application/rss+xml" title="Zhongwei Yao — Compilers, VMs & Systems Programming" href="https://zhongweiy.github.io/rss.xml"/>
 </head>
 <body>
 <div id="org-div-home-and-up">
-<!-- <a accesskey="H" href=""> UP </a> -->
  <a accesskey="H" href="index.html"> HOME </a>
  <a accesskey="A" href="about.html"> about </a>
+ <a href="rss.xml"> rss </a>
 </div><div id="content" class="content">
 <h1 class="title">Solve Emacs Not Compiled With Dbus Support issue</h1>
-
-<div id="outline-container-orgdc57eb9" class="outline-2">
-<h2 id="orgdc57eb9">The error</h2>
-<div class="outline-text-2" id="text-orgdc57eb9">
+<div id="outline-container-orgf359523" class="outline-2">
+<h2 id="orgf359523">The error</h2>
+<div class="outline-text-2" id="text-orgf359523">
 <p>
 When use the org-pomodora mode, emacs runs into following error:
 </p>
@@ -221,20 +221,20 @@ fixed by customize our own ‘org-show-notification’.
 </p>
 
 <div class="org-src-container">
-<pre class="src src-elisp">Debugger entered--Lisp error: (dbus-error "Emacs not compiled with dbus support")
-  signal(dbus-error ("Emacs not compiled with dbus support"))
-  dbus-call-method(:session "org.freedesktop.Notifications" "/org/freedesktop/Notifications" "org.freedesktop.Notifications" "Notify" :string "Emacs" :uint32 0 :string "/Applications/Emacs.app/Contents/Resources/etc/images/icons/hicolor/scalable/apps/emacs.svg" :string "Org-mode message" :string "Task 'Network exercise R23-R26' should be finished by now. (2)" (:array) ((:dict-entry "urgency" (:variant :byte 0))) :int32 -1)
-  byte-code("..." [params id y x transient resident plist-get :bus :session :title :body :app-name :replaces-id :app-icon :actions :timeout nil :urgency :category :desktop-entry :image-data :image-path :action-items :sound-file :sound-name :suppress-sound :resident :transient :x :y :dict-entry "urgency" :variant :byte low 0 critical 2 1 append "category" :string "desktop-entry" "image-data" :struct "image-path" "action-items" :boolean "sound-file" "sound-name" ...] 25)
-  notifications-notify(:title "Org-mode message" :body "Task 'Network exercise R23-R26' should be finished by now. (2)" :urgency low)
-  org-show-notification("Task 'Test org-pomodoro' should be finished by now. (2)")
-  org-notify("Task 'Network exercise R23-R26' should be finished by now. (2)" nil)
+<pre class="src src-elisp">Debugger entered--Lisp error: (dbus-error <span class="org-string">"Emacs not compiled with dbus support"</span>)
+  signal(dbus-error (<span class="org-string">"Emacs not compiled with dbus support"</span>))
+  dbus-call-method(<span class="org-builtin">:session</span> <span class="org-string">"org.freedesktop.Notifications"</span> <span class="org-string">"/org/freedesktop/Notifications"</span> <span class="org-string">"org.freedesktop.Notifications"</span> <span class="org-string">"Notify"</span> <span class="org-builtin">:string</span> <span class="org-string">"Emacs"</span> <span class="org-builtin">:uint32</span> 0 <span class="org-builtin">:string</span> <span class="org-string">"/Applications/Emacs.app/Contents/Resources/etc/images/icons/hicolor/scalable/apps/emacs.svg"</span> <span class="org-builtin">:string</span> <span class="org-string">"Org-mode message"</span> <span class="org-builtin">:string</span> <span class="org-string">"Task 'Network exercise R23-R26' should be finished by now. (2)"</span> (<span class="org-builtin">:array</span>) ((<span class="org-builtin">:dict-entry</span> <span class="org-string">"urgency"</span> (<span class="org-builtin">:variant</span> <span class="org-builtin">:byte</span> 0))) <span class="org-builtin">:int32</span> -1)
+  byte-code(<span class="org-string">"..."</span> [params id y x transient resident plist-get <span class="org-builtin">:bus</span> <span class="org-builtin">:session</span> <span class="org-builtin">:title</span> <span class="org-builtin">:body</span> <span class="org-builtin">:app-name</span> <span class="org-builtin">:replaces-id</span> <span class="org-builtin">:app-icon</span> <span class="org-builtin">:actions</span> <span class="org-builtin">:timeout</span> nil <span class="org-builtin">:urgency</span> <span class="org-builtin">:category</span> <span class="org-builtin">:desktop-entry</span> <span class="org-builtin">:image-data</span> <span class="org-builtin">:image-path</span> <span class="org-builtin">:action-items</span> <span class="org-builtin">:sound-file</span> <span class="org-builtin">:sound-name</span> <span class="org-builtin">:suppress-sound</span> <span class="org-builtin">:resident</span> <span class="org-builtin">:transient</span> <span class="org-builtin">:x</span> <span class="org-builtin">:y</span> <span class="org-builtin">:dict-entry</span> <span class="org-string">"urgency"</span> <span class="org-builtin">:variant</span> <span class="org-builtin">:byte</span> low 0 critical 2 1 append <span class="org-string">"category"</span> <span class="org-builtin">:string</span> <span class="org-string">"desktop-entry"</span> <span class="org-string">"image-data"</span> <span class="org-builtin">:struct</span> <span class="org-string">"image-path"</span> <span class="org-string">"action-items"</span> <span class="org-builtin">:boolean</span> <span class="org-string">"sound-file"</span> <span class="org-string">"sound-name"</span> ...] 25)
+  notifications-notify(<span class="org-builtin">:title</span> <span class="org-string">"Org-mode message"</span> <span class="org-builtin">:body</span> <span class="org-string">"Task 'Network exercise R23-R26' should be finished by now. (2)"</span> <span class="org-builtin">:urgency</span> low)
+  org-show-notification(<span class="org-string">"Task 'Test org-pomodoro' should be finished by now. (2)"</span>)
+  org-notify(<span class="org-string">"Task 'Network exercise R23-R26' should be finished by now. (2)"</span> nil)
   org-clock-notify-once-if-expired()
   org-clock-update-mode-line()
-  byte-code("..." [org-clock-resolving-clocks-due-to-idleness org-clock-resolving-clocks org-clock-leftover-time leftover org--msg-extra target-pos org-clocking-p nil "" t org-resolve-clocks (64) org-clock-in (4) org-clock-select-task "Clock-in on task: " copy-marker error "Abort" (16) org-clock-mark-default-task org-back-to-heading marker-buffer marker-position 4 org-heading-components message "Clock continues in \"%s\"" throw abort org-clock-out org-at-heading-p point-at-bol 0 org-base-buffer run-hooks org-clock-in-prepare-hook org-clock-history-push functionp looking-at match-string 2 org-todo "[    ]*" "\\&gt;" replace-regexp-in-string "\\[\\[.*?\\]\\[\\(.*?\\)\\]\\]" "\\1" match-string-no-properties "???" ...] 8)
+  byte-code(<span class="org-string">"..."</span> [org-clock-resolving-clocks-due-to-idleness org-clock-resolving-clocks org-clock-leftover-time leftover org--msg-extra target-pos org-clocking-p nil <span class="org-string">""</span> t org-resolve-clocks (64) org-clock-in (4) org-clock-select-task <span class="org-string">"Clock-in on task: "</span> copy-marker error <span class="org-string">"Abort"</span> (16) org-clock-mark-default-task org-back-to-heading marker-buffer marker-position 4 org-heading-components message <span class="org-string">"Clock continues in \"%s\""</span> throw abort org-clock-out org-at-heading-p point-at-bol 0 org-base-buffer run-hooks org-clock-in-prepare-hook org-clock-history-push functionp looking-at match-string 2 org-todo <span class="org-string">"[    ]*"</span> <span class="org-string">"\\&gt;"</span> replace-regexp-in-string <span class="org-string">"\\[\\[</span><span class="org-string"><span class="org-constant">.*?\\</span></span><span class="org-string">]\\[</span><span class="org-string"><span class="org-regexp-grouping-backslash">\\</span></span><span class="org-string"><span class="org-regexp-grouping-construct">(</span></span><span class="org-string">.*?</span><span class="org-string"><span class="org-regexp-grouping-backslash">\\</span></span><span class="org-string"><span class="org-regexp-grouping-construct">)</span></span><span class="org-string">\\]\\]"</span> <span class="org-string">"\\1"</span> match-string-no-properties <span class="org-string">"???"</span> ...] 8)
   org-clock-in(nil)
   call-interactively(org-clock-in)
-  (cond ((equal arg (quote (4))) (let ((current-prefix-arg (quote (4)))) (call-interactively (quote org-clock-in)))) ((equal arg (quote (16))) (call-interactively (quote org-clock-in-last))) ((eq major-mode (quote org-mode)) (call-interactively (quote org-clock-in))) ((eq major-mode (quote org-agenda-mode)) (let ((--mpom (org-get-at-bol (quote org-hd-marker)))) (save-excursion (if (markerp --mpom) (set-buffer (marker-buffer --mpom))) (save-excursion (save-restriction (widen) (goto-char (or --mpom ...)) (call-interactively (quote org-clock-in))))))) (t (let ((current-prefix-arg (quote (4)))) (call-interactively (quote org-clock-in)))))
-  (if (org-pomodoro-active-p) (if (or (not org-pomodoro-ask-upon-killing) (y-or-n-p "There is already a running timer.  Would you like to stop it? ")) (org-pomodoro-kill) (message "Alright, keep up the good work!")) (cond ((equal arg (quote (4))) (let ((current-prefix-arg (quote (4)))) (call-interactively (quote org-clock-in)))) ((equal arg (quote (16))) (call-interactively (quote org-clock-in-last))) ((eq major-mode (quote org-mode)) (call-interactively (quote org-clock-in))) ((eq major-mode (quote org-agenda-mode)) (let ((--mpom (org-get-at-bol (quote org-hd-marker)))) (save-excursion (if (markerp --mpom) (set-buffer (marker-buffer --mpom))) (save-excursion (save-restriction (widen) (goto-char ...) (call-interactively ...)))))) (t (let ((current-prefix-arg (quote (4)))) (call-interactively (quote org-clock-in))))) (org-pomodoro-start :pomodoro))
+  (<span class="org-keyword">cond</span> ((equal arg (<span class="org-keyword">quote</span> (4))) (<span class="org-keyword">let</span> ((current-prefix-arg (<span class="org-keyword">quote</span> (4)))) (call-interactively (<span class="org-keyword">quote</span> org-clock-in)))) ((equal arg (<span class="org-keyword">quote</span> (16))) (call-interactively (<span class="org-keyword">quote</span> org-clock-in-last))) ((eq major-mode (<span class="org-keyword">quote</span> org-mode)) (call-interactively (<span class="org-keyword">quote</span> org-clock-in))) ((eq major-mode (<span class="org-keyword">quote</span> org-agenda-mode)) (<span class="org-keyword">let</span> ((--mpom (org-get-at-bol (<span class="org-keyword">quote</span> org-hd-marker)))) (<span class="org-keyword">save-excursion</span> (<span class="org-keyword">if</span> (markerp --mpom) (set-buffer (marker-buffer --mpom))) (<span class="org-keyword">save-excursion</span> (<span class="org-keyword">save-restriction</span> (widen) (goto-char (<span class="org-keyword">or</span> --mpom ...)) (call-interactively (<span class="org-keyword">quote</span> org-clock-in))))))) (t (<span class="org-keyword">let</span> ((current-prefix-arg (<span class="org-keyword">quote</span> (4)))) (call-interactively (<span class="org-keyword">quote</span> org-clock-in)))))
+  (<span class="org-keyword">if</span> (org-pomodoro-active-p) (<span class="org-keyword">if</span> (<span class="org-keyword">or</span> (not org-pomodoro-ask-upon-killing) (y-or-n-p <span class="org-string">"There is already a running timer.  Would you like to stop it? "</span>)) (org-pomodoro-kill) (message <span class="org-string">"Alright, keep up the good work!"</span>)) (<span class="org-keyword">cond</span> ((equal arg (<span class="org-keyword">quote</span> (4))) (<span class="org-keyword">let</span> ((current-prefix-arg (<span class="org-keyword">quote</span> (4)))) (call-interactively (<span class="org-keyword">quote</span> org-clock-in)))) ((equal arg (<span class="org-keyword">quote</span> (16))) (call-interactively (<span class="org-keyword">quote</span> org-clock-in-last))) ((eq major-mode (<span class="org-keyword">quote</span> org-mode)) (call-interactively (<span class="org-keyword">quote</span> org-clock-in))) ((eq major-mode (<span class="org-keyword">quote</span> org-agenda-mode)) (<span class="org-keyword">let</span> ((--mpom (org-get-at-bol (<span class="org-keyword">quote</span> org-hd-marker)))) (<span class="org-keyword">save-excursion</span> (<span class="org-keyword">if</span> (markerp --mpom) (set-buffer (marker-buffer --mpom))) (<span class="org-keyword">save-excursion</span> (<span class="org-keyword">save-restriction</span> (widen) (goto-char ...) (call-interactively ...)))))) (t (<span class="org-keyword">let</span> ((current-prefix-arg (<span class="org-keyword">quote</span> (4)))) (call-interactively (<span class="org-keyword">quote</span> org-clock-in))))) (org-pomodoro-start <span class="org-builtin">:pomodoro</span>))
   org-pomodoro(nil)
   call-interactively(org-pomodoro nil nil)
   command-execute(org-pomodoro)    
@@ -242,9 +242,9 @@ fixed by customize our own ‘org-show-notification’.
 </div>
 </div>
 </div>
-<div id="outline-container-orgceb20c2" class="outline-2">
-<h2 id="orgceb20c2">A solution</h2>
-<div class="outline-text-2" id="text-orgceb20c2">
+<div id="outline-container-org8a520fa" class="outline-2">
+<h2 id="org8a520fa">A solution</h2>
+<div class="outline-text-2" id="text-org8a520fa">
 <p>
 Here are the steps:
 </p>
@@ -260,29 +260,29 @@ install terminal-notifier
 add terminal-notifier interface to your emacs (refer):
 </p>
 <div class="org-src-container">
-<pre class="src src-elisp">;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; Terminal notifier 
-;; requires 'brew install terminal-notifier'
-;; stolen from erc-notifier
+<pre class="src src-elisp"><span class="org-comment-delimiter">;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;</span><span class="org-comment">
+</span><span class="org-comment-delimiter">;; </span><span class="org-comment">Terminal notifier 
+</span><span class="org-comment-delimiter">;; </span><span class="org-comment">requires 'brew install terminal-notifier'
+</span><span class="org-comment-delimiter">;; </span><span class="org-comment">stolen from erc-notifier
+</span>
+(<span class="org-keyword">defvar</span> <span class="org-variable-name">terminal-notifier-command</span> (executable-find <span class="org-string">"terminal-notifier"</span>) <span class="org-doc">"The path to terminal-notifier."</span>)
 
-(defvar terminal-notifier-command (executable-find "terminal-notifier") "The path to terminal-notifier.")
-
-; (terminal-notifier-notify "Emacs notification" "Something amusing happened")
-
-(defun terminal-notifier-notify (title message)
-  "Show a message with 
+<span class="org-comment-delimiter">; </span><span class="org-comment">(terminal-notifier-notify "Emacs notification" "Something amusing happened")
+</span>
+(<span class="org-keyword">defun</span> <span class="org-function-name">terminal-notifier-notify</span> (title message)
+  <span class="org-doc">"Show a message with 
 terminal-notifier-command
-."
-  (start-process "terminal-notifier"
-                 "terminal-notifier"
+."</span>
+  (start-process <span class="org-string">"terminal-notifier"</span>
+                 <span class="org-string">"terminal-notifier"</span>
                  terminal-notifier-command
-                 "-title" title
-                 "-message" message
-                 "-activate" "org.gnu.Emacs"))
+                 <span class="org-string">"-title"</span> title
+                 <span class="org-string">"-message"</span> message
+                 <span class="org-string">"-activate"</span> <span class="org-string">"org.gnu.Emacs"</span>))
 
-(defun timed-notification (time msg)
-  (interactive "sNotification when (e.g: 2 minutes, 60 seconds, 3 days): \nsMessage: ")
-  (run-at-time time nil (lambda (msg) (terminal-notifier-notify "Emacs" msg)) msg))
+(<span class="org-keyword">defun</span> <span class="org-function-name">timed-notification</span> (time msg)
+  (<span class="org-keyword">interactive</span> <span class="org-string">"sNotification when (e.g: 2 minutes, 60 seconds, 3 days): \nsMessage: "</span>)
+  (run-at-time time nil (<span class="org-keyword">lambda</span> (msg) (terminal-notifier-notify <span class="org-string">"Emacs"</span> msg)) msg))
 
 </pre>
 </div></li>
@@ -290,8 +290,8 @@ terminal-notifier-command
 customize your org-show-notification-handler
 </p>
 <div class="org-src-container">
-<pre class="src src-elisp">(setq org-show-notification-handler
-      (lambda (msg) (timed-notification nil msg)))
+<pre class="src src-elisp">(<span class="org-keyword">setq</span> org-show-notification-handler
+      (<span class="org-keyword">lambda</span> (msg) (timed-notification nil msg)))
 </pre>
 </div></li>
 </ol>

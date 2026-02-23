@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>How scalar evolution is used to do optimization in LuaJIT</title>
 <meta name="generator" content="Org Mode" />
-<style>
+<style type="text/css">
   #content { max-width: 60em; margin: auto; }
   .title  { text-align: center;
              margin-bottom: .2em; }
@@ -192,12 +192,13 @@
   .org-svg { }
 </style>
 <link rel="stylesheet" href="./worg.css" type="text/css"/>
+<link rel="stylesheet" href="./htmlize.css" type="text/css"/><link rel="alternate" type="application/rss+xml" title="Zhongwei Yao — Compilers, VMs & Systems Programming" href="https://zhongweiy.github.io/rss.xml"/>
 </head>
 <body>
 <div id="org-div-home-and-up">
-<!-- <a accesskey="H" href=""> UP </a> -->
  <a accesskey="H" href="index.html"> HOME </a>
  <a accesskey="A" href="about.html"> about </a>
+ <a href="rss.xml"> rss </a>
 </div><div id="content" class="content">
 <h1 class="title">How scalar evolution is used to do optimization in LuaJIT</h1>
 <p>
@@ -206,25 +207,24 @@ the LuaJIT several months ago
 <a href="https://github.com/LuaJIT/LuaJIT/pull/1115">https://github.com/LuaJIT/LuaJIT/pull/1115</a>. It is interesting to see
 how Scalar Evolution result is used to do optimization.
 </p>
-
-<div id="outline-container-org4b3ae29" class="outline-2">
-<h2 id="org4b3ae29">what is Scalar Evolution?</h2>
-<div class="outline-text-2" id="text-org4b3ae29">
+<div id="outline-container-orgf10fa6f" class="outline-2">
+<h2 id="orgf10fa6f">what is Scalar Evolution?</h2>
+<div class="outline-text-2" id="text-orgf10fa6f">
 <p>
 While Scalar Evolution analysis (SE) can become complex in static
 compiler when we try to capture more cases (<a href="https://sbaziotis.com/compilers/introduction-to-scalar-evolution.html">example</a>). But in LuaJIT,
 it just records the index related information in a <code>for</code> loop:
 </p>
 <div class="org-src-container">
-<pre class="src src-c">typedef struct ScEvEntry {
-  MRef pc;		/* Bytecode PC of FORI. */
-  IRRef1 idx;		/* Index reference. */
-  IRRef1 start;		/* Constant start reference. */
-  IRRef1 stop;		/* Constant stop reference. */
-  IRRef1 step;		/* Constant step reference. */
-  IRType1 t;		/* Scalar type. */
-  uint8_t dir;		/* Direction. 1: +, 0: -. */
-} ScEvEntry;
+<pre class="src src-c"><span class="org-keyword">typedef</span> <span class="org-keyword">struct</span> <span class="org-type">ScEvEntry</span> {
+  <span class="org-type">MRef</span> <span class="org-variable-name">pc</span>;              <span class="org-comment-delimiter">/* </span><span class="org-comment">Bytecode PC of FORI.</span><span class="org-comment-delimiter"> */</span>
+  <span class="org-type">IRRef1</span> <span class="org-variable-name">idx</span>;           <span class="org-comment-delimiter">/* </span><span class="org-comment">Index reference.</span><span class="org-comment-delimiter"> */</span>
+  <span class="org-type">IRRef1</span> <span class="org-variable-name">start</span>;         <span class="org-comment-delimiter">/* </span><span class="org-comment">Constant start reference.</span><span class="org-comment-delimiter"> */</span>
+  <span class="org-type">IRRef1</span> <span class="org-variable-name">stop</span>;          <span class="org-comment-delimiter">/* </span><span class="org-comment">Constant stop reference.</span><span class="org-comment-delimiter"> */</span>
+  <span class="org-type">IRRef1</span> <span class="org-variable-name">step</span>;          <span class="org-comment-delimiter">/* </span><span class="org-comment">Constant step reference.</span><span class="org-comment-delimiter"> */</span>
+  <span class="org-type">IRType1</span> <span class="org-variable-name">t</span>;            <span class="org-comment-delimiter">/* </span><span class="org-comment">Scalar type.</span><span class="org-comment-delimiter"> */</span>
+  <span class="org-type">uint8_t</span> <span class="org-variable-name">dir</span>;          <span class="org-comment-delimiter">/* </span><span class="org-comment">Direction. 1: +, 0: -.</span><span class="org-comment-delimiter"> */</span>
+} <span class="org-type">ScEvEntry</span>;
 </pre>
 </div>
 
@@ -232,9 +232,9 @@ it just records the index related information in a <code>for</code> loop:
 For the code like
 </p>
 <div class="org-src-container">
-<pre class="src src-lua">for i = 1, n do
+<pre class="src src-lua"><span class="org-keyword">for</span> <span class="org-variable-name">i</span> = 1, n <span class="org-keyword">do</span>
   sum = sum + arr[i]
-end
+<span class="org-keyword">end</span>
 </pre>
 </div>
 <p>
@@ -242,10 +242,9 @@ Bascially, it records <code>i</code>'s information: start <code>1</code>, end <c
 </p>
 </div>
 </div>
-
-<div id="outline-container-org43e4b15" class="outline-2">
-<h2 id="org43e4b15">Two kinds of loop with different performance</h2>
-<div class="outline-text-2" id="text-org43e4b15">
+<div id="outline-container-orgcd537b6" class="outline-2">
+<h2 id="orgcd537b6">Two kinds of loop with different performance</h2>
+<div class="outline-text-2" id="text-orgcd537b6">
 <p>
 SE is used for array boundary check elimination (ABC
 elimination). ABC has non negligible performance overhead in safe
@@ -263,18 +262,18 @@ is safe to remove the ABC.
 For the following code
 </p>
 <div class="org-src-container">
-<pre class="src src-lua">local function faster(arr, n)
-  local sum = 0
-  for i = 1, n do
+<pre class="src src-lua"><span class="org-keyword">local</span> <span class="org-keyword">function</span> <span class="org-function-name">faster</span>(<span class="org-variable-name">arr</span>, <span class="org-variable-name">n</span>)
+  <span class="org-keyword">local</span> <span class="org-variable-name">sum</span> = 0
+  <span class="org-keyword">for</span> <span class="org-variable-name">i</span> = 1, n <span class="org-keyword">do</span>
     sum = sum + arr[i]
-  end
-  return sum
-end
+  <span class="org-keyword">end</span>
+  <span class="org-keyword">return</span> sum
+<span class="org-keyword">end</span>
 
-local myarr = {}
-for i = 1, 100 do
+<span class="org-keyword">local</span> <span class="org-variable-name">myarr</span> = {}
+<span class="org-keyword">for</span> <span class="org-variable-name">i</span> = 1, 100 <span class="org-keyword">do</span>
   myarr[#myarr + 1] = i
-end
+<span class="org-keyword">end</span>
 
 faster(myarr, 100)
 </pre>
@@ -285,31 +284,31 @@ It's trace is like:
 </p>
 <div class="org-src-container">
 <pre class="src src-asm">---- TRACE 2 start test.lua:3
-0006  TGETV    7   0   6
-0007  ADDVV    2   2   7
-0008  FORL     3 =&gt; 0006
+<span class="org-function-name">0006</span>  <span class="org-keyword">TGETV</span>    7   0   6
+<span class="org-function-name">0007</span>  <span class="org-keyword">ADDVV</span>    2   2   7
+<span class="org-function-name">0008</span>  <span class="org-keyword">FORL</span>     3 =&gt; 0006
 ---- TRACE 2 IR
-0001    int SLOAD  #6    RI
-0002 &gt;  int LE     0001  +2147483646
-0003 &gt;  int SLOAD  #5    TI
-0004 &gt;  tab SLOAD  #2    T
-0005    int FLOAD  0004  tab.asize
-0006 &gt;  p32 ABC    0005  0001
-0007    p64 FLOAD  0004  tab.array
-0008    p64 AREF   0007  0003
-0009 &gt;  int ALOAD  0008
-0010 &gt;  int SLOAD  #4    T
-0011 &gt;+ int ADDOV  0010  0009
-0012  + int ADD    0003  +1  
-0013 &gt;  int LE     0012  0001
-0014 ------ LOOP ------------
-0015    p64 AREF   0007  0012 
-0016 &gt;  int ALOAD  0015
-0017 &gt;+ int ADDOV  0016  0011
-0018  + int ADD    0012  +1  
-0019 &gt;  int LE     0018  0001
-0020    int PHI    0012  0018
-0021    int PHI    0011  0017
+<span class="org-function-name">0001</span>    <span class="org-keyword">int</span> SLOAD  #6    RI
+<span class="org-function-name">0002</span> &gt;  int LE     0001  +2147483646
+<span class="org-function-name">0003</span> &gt;  int SLOAD  #5    TI
+<span class="org-function-name">0004</span> &gt;  tab SLOAD  #2    T
+<span class="org-function-name">0005</span>    <span class="org-keyword">int</span> FLOAD  0004  tab.asize
+<span class="org-function-name">0006</span> &gt;  p32 ABC    0005  0001
+<span class="org-function-name">0007</span>    <span class="org-keyword">p64</span> FLOAD  0004  tab.array
+<span class="org-function-name">0008</span>    <span class="org-keyword">p64</span> AREF   0007  0003
+<span class="org-function-name">0009</span> &gt;  int ALOAD  0008
+<span class="org-function-name">0010</span> &gt;  int SLOAD  #4    T
+<span class="org-function-name">0011</span> &gt;+ int ADDOV  0010  0009
+<span class="org-function-name">0012</span>  + int ADD    0003  +1  
+<span class="org-function-name">0013</span> &gt;  int LE     0012  0001
+<span class="org-function-name">0014</span> ------ LOOP ------------
+<span class="org-function-name">0015</span>    <span class="org-keyword">p64</span> AREF   0007  0012 
+<span class="org-function-name">0016</span> &gt;  int ALOAD  0015
+<span class="org-function-name">0017</span> &gt;+ int ADDOV  0016  0011
+<span class="org-function-name">0018</span>  + int ADD    0012  +1  
+<span class="org-function-name">0019</span> &gt;  int LE     0018  0001
+<span class="org-function-name">0020</span>    <span class="org-keyword">int</span> PHI    0012  0018
+<span class="org-function-name">0021</span>    <span class="org-keyword">int</span> PHI    0011  0017
 </pre>
 </div>
 <p>
@@ -320,19 +319,19 @@ As we can see there is no ABC in the LOOP from 0014 to 0021.
 If we change the lua code a little bit to:
 </p>
 <div class="org-src-container">
-<pre class="src src-lua">local function slower(arr, n)
-  local sum, i = 0, 1
-  while i &lt;= n do
+<pre class="src src-lua"><span class="org-keyword">local</span> <span class="org-keyword">function</span> <span class="org-function-name">slower</span>(<span class="org-variable-name">arr</span>, <span class="org-variable-name">n</span>)
+  <span class="org-keyword">local</span> <span class="org-variable-name">sum</span>, <span class="org-variable-name">i</span> = 0, 1
+  <span class="org-keyword">while</span> i &lt;= n <span class="org-keyword">do</span>
     sum = sum + arr[i]
     i = i + 1
-  end
-  return sum
-end
+  <span class="org-keyword">end</span>
+  <span class="org-keyword">return</span> sum
+<span class="org-keyword">end</span>
 
-local myarr = {}
-for i = 1, 100 do
+<span class="org-keyword">local</span> <span class="org-variable-name">myarr</span> = {}
+<span class="org-keyword">for</span> <span class="org-variable-name">i</span> = 1, 100 <span class="org-keyword">do</span>
   myarr[#myarr + 1] = i
-end
+<span class="org-keyword">end</span>
 
 slower(myarr, 100)    
 </pre>
@@ -343,35 +342,35 @@ It's trace will be:
 </p>
 <div class="org-src-container">
 <pre class="src src-asm">---- TRACE 3 start test.lua:11
-0006  TGETV    4   0   3
-0007  ADDVV    2   2   4
-0008  ADDVN    3   3   0  ; 1
-0009  JMP      4 =&gt; 0003
-0003  ISGT     3   1
-0004  JMP      4 =&gt; 0010
-0005  LOOP     4 =&gt; 0010
+<span class="org-function-name">0006</span>  <span class="org-keyword">TGETV</span>    4   0   3
+<span class="org-function-name">0007</span>  <span class="org-keyword">ADDVV</span>    2   2   4
+<span class="org-function-name">0008</span>  <span class="org-keyword">ADDVN</span>    3   3   0  <span class="org-comment-delimiter">; </span><span class="org-comment">1
+</span><span class="org-function-name">0009</span>  <span class="org-keyword">JMP</span>      4 =&gt; 0003
+<span class="org-function-name">0003</span>  <span class="org-keyword">ISGT</span>     3   1
+<span class="org-function-name">0004</span>  <span class="org-keyword">JMP</span>      4 =&gt; 0010
+<span class="org-function-name">0005</span>  <span class="org-keyword">LOOP</span>     4 =&gt; 0010
 ---- TRACE 3 IR
-0001 &gt;  tab SLOAD  #2    T
-0002 &gt;  int SLOAD  #5    T
-0003    int FLOAD  0001  tab.asize
-0004 &gt;  int ABC    0003  0002
-0005    p64 FLOAD  0001  tab.array
-0006    p64 AREF   0005  0002
-0007 &gt;  int ALOAD  0006
-0008 &gt;  int SLOAD  #4    T
-0009 &gt;+ int ADDOV  0008  0007
-0010 &gt;+ int ADDOV  0002  +1  
-0011 &gt;  int SLOAD  #3    T
-0012 &gt;  int GE     0011  0010
-0013 ------ LOOP ------------
-0014 &gt;  int ABC    0003  0010
-0015    p64 AREF   0005  0010
-0016 &gt;  int ALOAD  0015
-0017 &gt;+ int ADDOV  0016  0009
-0018 &gt;+ int ADDOV  0010  +1  
-0019 &gt;  int LE     0018  0011
-0020    int PHI    0010  0018
-0021    int PHI    0009  0017 
+<span class="org-function-name">0001</span> &gt;  tab SLOAD  #2    T
+<span class="org-function-name">0002</span> &gt;  int SLOAD  #5    T
+<span class="org-function-name">0003</span>    <span class="org-keyword">int</span> FLOAD  0001  tab.asize
+<span class="org-function-name">0004</span> &gt;  int ABC    0003  0002
+<span class="org-function-name">0005</span>    <span class="org-keyword">p64</span> FLOAD  0001  tab.array
+<span class="org-function-name">0006</span>    <span class="org-keyword">p64</span> AREF   0005  0002
+<span class="org-function-name">0007</span> &gt;  int ALOAD  0006
+<span class="org-function-name">0008</span> &gt;  int SLOAD  #4    T
+<span class="org-function-name">0009</span> &gt;+ int ADDOV  0008  0007
+<span class="org-function-name">0010</span> &gt;+ int ADDOV  0002  +1  
+<span class="org-function-name">0011</span> &gt;  int SLOAD  #3    T
+<span class="org-function-name">0012</span> &gt;  int GE     0011  0010
+<span class="org-function-name">0013</span> ------ LOOP ------------
+<span class="org-function-name">0014</span> &gt;  int ABC    0003  0010
+<span class="org-function-name">0015</span>    <span class="org-keyword">p64</span> AREF   0005  0010
+<span class="org-function-name">0016</span> &gt;  int ALOAD  0015
+<span class="org-function-name">0017</span> &gt;+ int ADDOV  0016  0009
+<span class="org-function-name">0018</span> &gt;+ int ADDOV  0010  +1  
+<span class="org-function-name">0019</span> &gt;  int LE     0018  0011
+<span class="org-function-name">0020</span>    <span class="org-keyword">int</span> PHI    0010  0018
+<span class="org-function-name">0021</span>    <span class="org-keyword">int</span> PHI    0009  0017 
 </pre>
 </div>
 
@@ -383,29 +382,29 @@ The ABC (0014) is not eliminated in the LOOP.
 Here is the comparison:
 </p>
 <div class="org-src-container">
-<pre class="src src-asm">   // faster                                         // slower
----- TRACE 2 IR                                    ---- TRACE 3 IR                    
-0001    int SLOAD  #6    RI                        0001 &gt;  tab SLOAD  #2    T         
-0002 &gt;  int LE     0001  +2147483646               0002 &gt;  int SLOAD  #5    T         
-0003 &gt;  int SLOAD  #5    TI                        0003    int FLOAD  0001  tab.asize 
-0004 &gt;  tab SLOAD  #2    T                         0004 &gt;  int ABC    0003  0002      
-0005    int FLOAD  0004  tab.asize                 0005    p64 FLOAD  0001  tab.array 
-0006 &gt;  p32 ABC    0005  0001                      0006    p64 AREF   0005  0002      
-0007    p64 FLOAD  0004  tab.array                 0007 &gt;  int ALOAD  0006            
-0008    p64 AREF   0007  0003                      0008 &gt;  int SLOAD  #4    T         
-0009 &gt;  int ALOAD  0008                            0009 &gt;+ int ADDOV  0008  0007      
-0010 &gt;  int SLOAD  #4    T                         0010 &gt;+ int ADDOV  0002  +1        
-0011 &gt;+ int ADDOV  0010  0009                      0011 &gt;  int SLOAD  #3    T         
-0012  + int ADD    0003  +1                        0012 &gt;  int GE     0011  0010      
-0013 &gt;  int LE     0012  0001                      0013 ------ LOOP ------------      
-0014 ------ LOOP ------------                      0014 &gt;  int ABC    0003  0010      
-0015    p64 AREF   0007  0012                      0015    p64 AREF   0005  0010      
-0016 &gt;  int ALOAD  0015                            0016 &gt;  int ALOAD  0015            
-0017 &gt;+ int ADDOV  0016  0011                      0017 &gt;+ int ADDOV  0016  0009      
-0018  + int ADD    0012  +1                        0018 &gt;+ int ADDOV  0010  +1        
-0019 &gt;  int LE     0018  0001                      0019 &gt;  int LE     0018  0011      
-0020    int PHI    0012  0018                      0020    int PHI    0010  0018      
-0021    int PHI    0011  0017                      0021    int PHI    0009  0017      
+<pre class="src src-asm">   <span class="org-comment-delimiter">// </span><span class="org-comment">faster                                         // slower
+</span>---- TRACE 2 IR                                    ---- TRACE 3 IR                    
+<span class="org-function-name">0001</span>    <span class="org-keyword">int</span> SLOAD  #6    RI                        0001 &gt;  tab SLOAD  #2    T         
+<span class="org-function-name">0002</span> &gt;  int LE     0001  +2147483646               0002 &gt;  int SLOAD  #5    T         
+<span class="org-function-name">0003</span> &gt;  int SLOAD  #5    TI                        0003    int FLOAD  0001  tab.asize 
+<span class="org-function-name">0004</span> &gt;  tab SLOAD  #2    T                         0004 &gt;  int ABC    0003  0002      
+<span class="org-function-name">0005</span>    <span class="org-keyword">int</span> FLOAD  0004  tab.asize                 0005    p64 FLOAD  0001  tab.array 
+<span class="org-function-name">0006</span> &gt;  p32 ABC    0005  0001                      0006    p64 AREF   0005  0002      
+<span class="org-function-name">0007</span>    <span class="org-keyword">p64</span> FLOAD  0004  tab.array                 0007 &gt;  int ALOAD  0006            
+<span class="org-function-name">0008</span>    <span class="org-keyword">p64</span> AREF   0007  0003                      0008 &gt;  int SLOAD  #4    T         
+<span class="org-function-name">0009</span> &gt;  int ALOAD  0008                            0009 &gt;+ int ADDOV  0008  0007      
+<span class="org-function-name">0010</span> &gt;  int SLOAD  #4    T                         0010 &gt;+ int ADDOV  0002  +1        
+<span class="org-function-name">0011</span> &gt;+ int ADDOV  0010  0009                      0011 &gt;  int SLOAD  #3    T         
+<span class="org-function-name">0012</span>  + int ADD    0003  +1                        0012 &gt;  int GE     0011  0010      
+<span class="org-function-name">0013</span> &gt;  int LE     0012  0001                      0013 ------ LOOP ------------      
+<span class="org-function-name">0014</span> ------ LOOP ------------                      0014 &gt;  int ABC    0003  0010      
+<span class="org-function-name">0015</span>    <span class="org-keyword">p64</span> AREF   0007  0012                      0015    p64 AREF   0005  0010      
+<span class="org-function-name">0016</span> &gt;  int ALOAD  0015                            0016 &gt;  int ALOAD  0015            
+<span class="org-function-name">0017</span> &gt;+ int ADDOV  0016  0011                      0017 &gt;+ int ADDOV  0016  0009      
+<span class="org-function-name">0018</span>  + int ADD    0012  +1                        0018 &gt;+ int ADDOV  0010  +1        
+<span class="org-function-name">0019</span> &gt;  int LE     0018  0001                      0019 &gt;  int LE     0018  0011      
+<span class="org-function-name">0020</span>    <span class="org-keyword">int</span> PHI    0012  0018                      0020    int PHI    0010  0018      
+<span class="org-function-name">0021</span>    <span class="org-keyword">int</span> PHI    0011  0017                      0021    int PHI    0009  0017      
 </pre>
 </div>
 
@@ -425,16 +424,16 @@ regenerated since its operands does not change and ABC itself is a
 normal op without side effect (<code>IRM_N</code>).
 </p>
 <div class="org-src-container">
-<pre class="src src-c">// static void loop_unroll(LoopState *lps)
-/* Substitute instruction operands. */
+<pre class="src src-c"><span class="org-comment-delimiter">// </span><span class="org-comment">static void loop_unroll(LoopState *lps)
+</span><span class="org-comment-delimiter">/* </span><span class="org-comment">Substitute instruction operands.</span><span class="org-comment-delimiter"> */</span>
 ir = IR(ins);
 op1 = ir-&gt;op1;
-if (!irref_isk(op1)) op1 = subst[op1];
+<span class="org-keyword">if</span> (<span class="org-negation-char">!</span>irref_isk(op1)) op1 = subst[op1];
 op2 = ir-&gt;op2;
-if (!irref_isk(op2)) op2 = subst[op2];
-if (irm_kind(lj_ir_mode[ir-&gt;o]) == IRM_N &amp;&amp;
-    op1 == ir-&gt;op1 &amp;&amp; op2 == ir-&gt;op2) {  /* Regular invariant ins? */
-  subst[ins] = (IRRef1)ins;  /* Shortcut. */
+<span class="org-keyword">if</span> (<span class="org-negation-char">!</span>irref_isk(op2)) op2 = subst[op2];
+<span class="org-keyword">if</span> (irm_kind(lj_ir_mode[ir-&gt;o]) == IRM_N &amp;&amp;
+    op1 == ir-&gt;op1 &amp;&amp; op2 == ir-&gt;op2) {  <span class="org-comment-delimiter">/* </span><span class="org-comment">Regular invariant ins?</span><span class="org-comment-delimiter"> */</span>
+  subst[ins] = (<span class="org-type">IRRef1</span>)ins;  <span class="org-comment-delimiter">/* </span><span class="org-comment">Shortcut.</span><span class="org-comment-delimiter"> */</span>
 }
 </pre>
 </div>
@@ -453,10 +452,9 @@ does not works with the <code>LOOP</code> Byte Code (BC), it only works with <co
 </p>
 </div>
 </div>
-
-<div id="outline-container-org144b6e6" class="outline-2">
-<h2 id="org144b6e6">Strength reduction</h2>
-<div class="outline-text-2" id="text-org144b6e6">
+<div id="outline-container-org0e86f95" class="outline-2">
+<h2 id="org0e86f95">Strength reduction</h2>
+<div class="outline-text-2" id="text-org0e86f95">
 <p>
 When there is a CONV IR that convert integer with sign extention,
 Scalar Evolution result can also be used to simplify (eliminate) the
