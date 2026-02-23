@@ -324,7 +324,7 @@ in the Time Profiler's config.
 </p>
 
 
-<div id="org6a4df7d" class="figure">
+<div id="org0e46bef" class="figure">
 <p><img src="./imgs/emacs_profile_flame_graph.png" alt="emacs_profile_flame_graph.png" />
 </p>
 <p><span class="figure-number">Figure 1: </span>Emacs Profiling Flame Graph</p>
@@ -572,7 +572,7 @@ And here is the flame graph:
 </p>
 
 
-<div id="orgf98b4d1" class="figure">
+<div id="orgedbed2a" class="figure">
 <p><img src="./imgs/test_fork_exec_profile_flame_graph.png" alt="test_fork_exec_profile_flame_graph.png" />
 </p>
 <p><span class="figure-number">Figure 2: </span>Test Fork and Exec Profiling Flame Graph</p>
@@ -612,7 +612,13 @@ well maintained and is incomplete.
 </p>
 
 <p>
-Another solution is to reduce the number of git calls by:
+And tried a "static" git build to workaround the dynamic loader
+issue. But the "static" build still contains a bunch of dynamic lib
+loading. Finally it doesn't improve the performance at all.
+</p>
+
+<p>
+Another try is to reduce the number of git calls by:
 </p>
 <div class="org-src-container">
 <pre class="src src-elisp">(<span class="org-keyword">with-eval-after-load</span> 'magit
